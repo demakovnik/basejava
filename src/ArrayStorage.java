@@ -9,11 +9,7 @@ public class ArrayStorage {
 
     void clear() {
         for (int i = 0; i < position; i++) {
-            if (storage[i] != null) {
-                storage[i] = null;
-            } else {
-                break;
-            }
+            storage[i] = null;
         }
         position = 0;
     }
@@ -23,10 +19,10 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        for (Resume resume : storage) {
-            if (resume != null && resume.uuid.equals(uuid)) {
-                return resume;
-            }
+        for (int i = 0; i < position; i++) {
+           if (storage[i].uuid.equals(uuid)) {
+               return storage[i];
+           }
         }
         return null;
     }
