@@ -15,6 +15,12 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
+        for (int i = 0; i < position; i++) {
+            if (r.equals(storage[i])) {
+                showFailMessageInList(r.uuid);
+                return;
+            }
+        }
         storage[position++] = r;
     }
 
@@ -24,18 +30,38 @@ public class ArrayStorage {
                return storage[i];
            }
         }
+        showFailMessageOutOfList(uuid);
         return null;
+    }
+
+    void update(Resume r) {
+        for (int i = 0; i < position; i++) {
+            if (storage[i].equals(r)) {
+                storage[i] = new Resume();
+                return;
+            }
+        }
+        showFailMessageOutOfList(r.uuid);
     }
 
     void delete(String uuid) {
         for (int i = 0; i < position; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                System.arraycopy(storage, i + 1, storage, i, position - i - 1);
+                storage[i] = storage[position - 1];
                 storage[position - 1] = null;
                 position--;
                 return;
             }
         }
+        showFailMessageOutOfList(uuid);
+    }
+
+    void showFailMessageOutOfList(String uuid) {
+        System.out.println("Резюме c uuid " + uuid + " отсутствует в списке");
+    }
+
+    void showFailMessageInList(String uuid) {
+        System.out.println("Резюме c uuid " + uuid + " уже есть в списке");
     }
 
     /**
