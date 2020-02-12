@@ -14,54 +14,46 @@ public class ArrayStorage {
         position = 0;
     }
 
-    void save(Resume r) {
+    void save(Resume resume) {
         for (int i = 0; i < position; i++) {
-            if (r.equals(storage[i])) {
-                showFailMessageInList(r.uuid);
+            if (storage[i].getUuid().equals(resume.getUuid())) {
+                System.out.println("Резюме c uuid " + resume.getUuid() + " уже есть в списке");
                 return;
             }
         }
-        storage[position++] = r;
+        storage[position++] = resume;
     }
 
     Resume get(String uuid) {
         for (int i = 0; i < position; i++) {
-           if (storage[i].uuid.equals(uuid)) {
-               return storage[i];
-           }
+            if (storage[i].getUuid().equals(uuid)) {
+                return storage[i];
+            }
         }
-        showFailMessageOutOfList(uuid);
+        System.out.println("Резюме c uuid " + uuid + " отсутствует в списке");
         return null;
     }
 
-    void update(Resume r) {
+    void update(Resume requiredResume, Resume resume) {
         for (int i = 0; i < position; i++) {
-            if (storage[i].equals(r)) {
-                storage[i] = new Resume();
+            if (storage[i].getUuid().equals(requiredResume.getUuid())) {
+                storage[i] = resume;
                 return;
             }
         }
-        showFailMessageOutOfList(r.uuid);
+        System.out.println("Резюме c uuid " + requiredResume.getUuid() + " отсутствует в списке");
     }
 
     void delete(String uuid) {
         for (int i = 0; i < position; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 storage[i] = storage[position - 1];
                 storage[position - 1] = null;
                 position--;
                 return;
             }
         }
-        showFailMessageOutOfList(uuid);
-    }
-
-    void showFailMessageOutOfList(String uuid) {
         System.out.println("Резюме c uuid " + uuid + " отсутствует в списке");
-    }
-
-    void showFailMessageInList(String uuid) {
-        System.out.println("Резюме c uuid " + uuid + " уже есть в списке");
     }
 
     /**
