@@ -15,6 +15,10 @@ public class ArrayStorage {
     }
 
     void save(Resume resume) {
+        if (position == storage.length) {
+            System.out.println("Хранилище резюме заполнено");
+            return;
+        }
         for (int i = 0; i < position; i++) {
             if (storage[i].getUuid().equals(resume.getUuid())) {
                 System.out.println("Резюме c uuid " + resume.getUuid() + " уже есть в списке");
@@ -34,26 +38,32 @@ public class ArrayStorage {
         return null;
     }
 
-    void update(Resume requiredResume, Resume resume) {
-        for (int i = 0; i < position; i++) {
-            if (storage[i].getUuid().equals(requiredResume.getUuid())) {
-                storage[i] = resume;
-                return;
-            }
+    void update(Resume resume) {
+        if (get(resume.getUuid()) != null) {
+            storage[returnIndexOfResume(resume)] = resume;
+            return;
         }
-        System.out.println("Резюме c uuid " + requiredResume.getUuid() + " отсутствует в списке");
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < position; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                storage[i] = storage[position - 1];
-                storage[position - 1] = null;
-                position--;
-                return;
+        if (get(uuid) != null) {
+            storage[returnIndexOfResume(get(uuid))] = storage[position - 1];
+            storage[position - 1] = null;
+            position--;
+            return;
+        }
+        return;
+    }
+
+    private int returnIndexOfResume(Resume resume) {
+        if (get(resume.getUuid()) != null) {
+            for (int i = 0; i < position; i++) {
+                if (storage[i].getUuid().equals(resume.getUuid())) {
+                    return i;
+                }
             }
         }
-        System.out.println("Резюме c uuid " + uuid + " отсутствует в списке");
+        return -1;
     }
 
     /**

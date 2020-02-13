@@ -48,11 +48,9 @@ public class MainArray {
                     printAll();
                     break;
                 case "update":
-                    Resume requiredResume = new Resume();
-                    requiredResume.setUuid(params[1]);
                     resume = new Resume();
-                    resume.setUuid(params[2]);
-                    ARRAY_STORAGE.update(requiredResume,resume);
+                    resume.setUuid(params[1]);
+                    ARRAY_STORAGE.update(resume);
                     printAll();
                     break;
                 case "exit":
