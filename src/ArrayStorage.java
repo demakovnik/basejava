@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * Array based storage for Resumes
@@ -19,50 +20,46 @@ public class ArrayStorage {
             System.out.println("Хранилище резюме заполнено");
             return;
         }
-        for (int i = 0; i < position; i++) {
-            if (storage[i].getUuid().equals(resume.getUuid())) {
-                System.out.println("Резюме c uuid " + resume.getUuid() + " уже есть в списке");
-                return;
-            }
+        int indexOfResume = getIndexOfResume(resume.getUuid());
+        if (indexOfResume >= 0) {
+            System.out.println("Резюме c uuid " + resume.getUuid() + " уже есть в списке");
+            return;
         }
         storage[position++] = resume;
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < position; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
+        int indexOfResume = getIndexOfResume(uuid);
+        if (indexOfResume >= 0) {
+            return storage[indexOfResume];
         }
-        System.out.println("Резюме c uuid " + uuid + " отсутствует в списке");
         return null;
     }
 
     void update(Resume resume) {
-        if (get(resume.getUuid()) != null) {
-            storage[returnIndexOfResume(resume)] = resume;
-            return;
+        int indexOfResume = getIndexOfResume(resume.getUuid());
+        if (indexOfResume >= 0) {
+            storage[indexOfResume] = resume;
         }
     }
 
-    void delete(String uuid) {
-        if (get(uuid) != null) {
-            storage[returnIndexOfResume(get(uuid))] = storage[position - 1];
+    void delete(String Uuid) {
+        int indexOfResume = getIndexOfResume(Uuid);
+        if (indexOfResume >= 0) {
+            storage[indexOfResume] = storage[position - 1];
             storage[position - 1] = null;
             position--;
             return;
         }
-        return;
     }
 
-    private int returnIndexOfResume(Resume resume) {
-        if (get(resume.getUuid()) != null) {
-            for (int i = 0; i < position; i++) {
-                if (storage[i].getUuid().equals(resume.getUuid())) {
-                    return i;
-                }
+    private int getIndexOfResume(String Uuid) {
+        for (int i = 0; i < position; i++) {
+            if (storage[i].getUuid().equals(Uuid)) {
+                return i;
             }
         }
+        System.out.println("Резюме c uuid " + Uuid + " отсутствует в списке");
         return -1;
     }
 
