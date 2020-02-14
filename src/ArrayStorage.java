@@ -27,9 +27,9 @@ public class ArrayStorage {
         int indexOfResume = getIndexOfResume(resume.getUuid());
         if (indexOfResume >= 0) {
             storage[indexOfResume] = resume;
-        } else {
-            System.out.println("Резюме c uuid " + resume.getUuid() + " отсутствует в списке");
+            return;
         }
+        System.out.println("Резюме c uuid " + resume.getUuid() + " отсутствует в списке");
     }
 
     void delete(String Uuid) {
@@ -39,9 +39,8 @@ public class ArrayStorage {
             storage[position - 1] = null;
             position--;
             return;
-        } else {
-            System.out.println("Резюме c uuid " + Uuid + " отсутствует в списке");
         }
+        System.out.println("Резюме c uuid " + Uuid + " отсутствует в списке");
     }
 
     private int getIndexOfResume(String Uuid) {
@@ -65,7 +64,7 @@ public class ArrayStorage {
         }
         storage[position++] = resume;
     }
-
+    
     /**
      * @return array, contains only Resumes in storage (without null)
      */
