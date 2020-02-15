@@ -1,20 +1,23 @@
+package com.urise.webapp.storage;
+
+import com.urise.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    private int position;
+    public static final int STORAGE_LIMIT = 10000;
+    Resume[] storage = new Resume[STORAGE_LIMIT];
+    private int size;
 
-    void clear() {
-        for (int i = 0; i < position; i++) {
-            storage[i] = null;
-        }
-        position = 0;
+    public void clear() {
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         int indexOfResume = getIndexOfResume(uuid);
         if (indexOfResume >= 0) {
             return storage[indexOfResume];
@@ -23,7 +26,7 @@ public class ArrayStorage {
         return null;
     }
 
-    void update(Resume resume) {
+    public void update(Resume resume) {
         int indexOfResume = getIndexOfResume(resume.getUuid());
         if (indexOfResume >= 0) {
             storage[indexOfResume] = resume;
@@ -32,19 +35,19 @@ public class ArrayStorage {
         System.out.println("Резюме c uuid " + resume.getUuid() + " отсутствует в списке");
     }
 
-    void delete(String Uuid) {
+    public void delete(String Uuid) {
         int indexOfResume = getIndexOfResume(Uuid);
         if (indexOfResume >= 0) {
-            storage[indexOfResume] = storage[position - 1];
-            storage[position - 1] = null;
-            position--;
+            storage[indexOfResume] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
             return;
         }
         System.out.println("Резюме c uuid " + Uuid + " отсутствует в списке");
     }
 
     private int getIndexOfResume(String Uuid) {
-        for (int i = 0; i < position; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(Uuid)) {
                 return i;
             }
@@ -52,8 +55,8 @@ public class ArrayStorage {
         return -1;
     }
 
-    void save(Resume resume) {
-        if (position == storage.length) {
+    public void save(Resume resume) {
+        if (size == STORAGE_LIMIT) {
             System.out.println("Хранилище резюме заполнено");
             return;
         }
@@ -62,17 +65,17 @@ public class ArrayStorage {
             System.out.println("Резюме c uuid " + resume.getUuid() + " уже есть в списке");
             return;
         }
-        storage[position++] = resume;
+        storage[size++] = resume;
     }
-    
+
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
-        return Arrays.copyOf(storage, position);
+    public Resume[] getAll() {
+        return Arrays.copyOfRange(storage, 0, size);
     }
 
-    int size() {
-        return position;
+    public int size() {
+        return size;
     }
 }
