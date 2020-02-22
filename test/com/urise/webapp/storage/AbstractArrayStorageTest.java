@@ -45,6 +45,7 @@ public class AbstractArrayStorageTest {
     public void save() {
         Resume resume = new Resume("uuid4");
         storage.save(resume);
+        Assert.assertEquals(resume,storage.get(resume.getUuid()));
     }
 
     @Test(expected = StorageException.class)
