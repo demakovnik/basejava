@@ -10,14 +10,10 @@ public class MainArray {
     static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
-        final Resume r1 = new Resume();
-        r1.setUuid("uuid5");
-        final Resume r2 = new Resume();
-        r2.setUuid("uuid4");
-        final Resume r3 = new Resume();
-        r3.setUuid("uuid7");
-        final Resume r4 = new Resume();
-        r4.setUuid("uuid2");
+        final Resume r1 = new Resume("uuid5");
+        final Resume r2 = new Resume("uuid4");
+        final Resume r3 = new Resume("uuid7");
+        final Resume r4 = new Resume("uuid2");
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);

@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -13,6 +16,8 @@ public abstract class AbstractArrayStorage implements Storage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
+
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -25,18 +30,16 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[indexOfResume] = resume;
             return;
         }
-        System.out.println("Резюме c uuid " + resume.getUuid() + " отсутствует в списке");
+        throw new NotExistStorageException(resume.getUuid());
     }
 
     public void save(Resume resume) {
         if (size == STORAGE_LIMIT) {
-            System.out.println("Хранилище резюме заполнено");
-            return;
+            throw new StorageException("Хранилище резюме заполнено", resume.getUuid());
         }
         int indexOfResume = getIndexOfResume(resume.getUuid());
         if (indexOfResume >= 0) {
-            System.out.println("Резюме c uuid " + resume.getUuid() + " уже есть в списке");
-            return;
+            throw new ExistStorageException(resume.getUuid());
         }
         insertIntoArray(resume, indexOfResume);
         size++;
@@ -50,7 +53,7 @@ public abstract class AbstractArrayStorage implements Storage {
             size--;
             return;
         }
-        System.out.println("Резюме c uuid " + uuid + " отсутствует в списке");
+        throw new NotExistStorageException(uuid);
     }
 
     public Resume get(String uuid) {
@@ -58,8 +61,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (indexOfResume >= 0) {
             return storage[indexOfResume];
         }
-        System.out.println("Резюме c uuid " + uuid + " отсутствует в списке");
-        return null;
+        throw new NotExistStorageException(uuid);
     }
 
     public Resume[] getAll() {
@@ -71,7 +73,9 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     protected abstract int getIndexOfResume(String uuid);
+
     protected abstract void baseDeleteElement(int index);
+
     protected abstract void insertIntoArray(Resume resume, int index);
 
 }
