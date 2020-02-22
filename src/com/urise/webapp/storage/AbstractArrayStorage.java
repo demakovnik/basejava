@@ -36,13 +36,15 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume resume) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Хранилище резюме заполнено", resume.getUuid());
+
+        } else {
+            int indexOfResume = getIndexOfResume(resume.getUuid());
+            if (indexOfResume >= 0) {
+                throw new ExistStorageException(resume.getUuid());
+            }
+            insertIntoArray(resume, indexOfResume);
+            size++;
         }
-        int indexOfResume = getIndexOfResume(resume.getUuid());
-        if (indexOfResume >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        }
-        insertIntoArray(resume, indexOfResume);
-        size++;
     }
 
     public void delete(String uuid) {

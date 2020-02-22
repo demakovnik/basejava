@@ -44,11 +44,6 @@ public class AbstractArrayStorageTest {
     @Test
     public void save() {
         Resume resume = new Resume("uuid4");
-        try {
-            storage.get(resume.getUuid());
-        } catch (NotExistStorageException ex) {
-            System.out.println(ex.getMessage());
-        }
         storage.save(resume);
     }
 
