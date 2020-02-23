@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
@@ -9,75 +10,102 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class AbstractArrayStorageTest {
+public abstract class AbstractArrayStorageTest {
 
     private final Storage storage;
-    private final String UUID1 = "uuid1";
-    private final String UUID2 = "uuid2";
-    private final String UUID3 = "uuid3";
+    private final static String UUID1 = "uuid1";
+    private final static String UUID2 = "uuid2";
+    private final static String UUID3 = "uuid3";
+    private final static String UUID4 = "uuid4";
+    private final static String DUMMY = "dummy";
 
-    public AbstractArrayStorageTest(Storage storage) {
+    private final Resume resume1 = new Resume(UUID1);
+    private final Resume resume2 = new Resume(UUID2);
+    private final Resume resume3 = new Resume(UUID3);
+    private final Resume resume4 = new Resume(UUID4);
+    private final Resume resumeDummy = new Resume(DUMMY);
+
+    protected AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
 
     @Before
     public void setUp() {
         storage.clear();
-        storage.save(new Resume(UUID1));
-        storage.save(new Resume(UUID2));
-        storage.save(new Resume(UUID3));
+        storage.save(resume1);
+        storage.save(resume2);
+        storage.save(resume3);
     }
 
     @Test
     public void clear() {
         storage.clear();
-        assertEquals(storage.size(),0);
+        assertEquals(0, storage.size());
     }
 
     @Test
     public void update() {
-        Resume resume = new Resume(UUID1);
-        storage.update(resume);
-        Assert.assertEquals(resume, storage.get(resume.getUuid()));
+        storage.update(resume1);
+        Assert.assertTrue(resume1 == storage.get(UUID1));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void updateNotExist() {
+        storage.update(resumeDummy);
     }
 
     @Test
     public void save() {
-        Resume resume = new Resume("uuid4");
-        storage.save(resume);
-        Assert.assertEquals(resume,storage.get(resume.getUuid()));
+        storage.save(resume4);
+        Assert.assertEquals(4, storage.size());
+        Assert.assertEquals(resume4, storage.get(resume4.getUuid()));
+    }
+
+    @Test(expected = ExistStorageException.class)
+    public void saveExist() {
+        storage.save(resume1);
     }
 
     @Test(expected = StorageException.class)
-    public void arrayOverflow() {
-        for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-            storage.save(new Resume());
+    public void saveOverflow() {
+        try {
+            for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+                storage.save(new Resume());
+            }
+        } catch (StorageException ex) {
+            Assert.fail();
         }
         storage.save(new Resume());
     }
 
     @Test(expected = NotExistStorageException.class)
     public void delete() {
-        Resume deletingResume = storage.get(UUID2);
-        storage.delete(deletingResume.getUuid());
+        storage.delete(UUID2);
+        assertEquals(2, storage.size());
         storage.get(UUID2);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void deleteNotExist() {
+        storage.delete(DUMMY);
     }
 
     @Test
     public void get() {
         Resume result = storage.get(UUID2);
-        Assert.assertEquals(result,new Resume(UUID2));
+        Assert.assertEquals(resume2, result);
     }
 
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
-        storage.get("dummy");
+        storage.get(DUMMY);
     }
 
     @Test
     public void getAll() {
-        Resume[] result = new Resume[]{new Resume(UUID1), new Resume(UUID2), new Resume(UUID3)};
-        Assert.assertEquals(result, storage.getAll());
+        Resume[] result = new Resume[]{resume1, resume2, resume3};
+        assertEquals(3, storage.size());
+        Assert.assertArrayEquals(storage.getAll(), result);
     }
 
     @Test
