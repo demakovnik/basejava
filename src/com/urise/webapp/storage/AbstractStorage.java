@@ -22,13 +22,13 @@ public abstract class AbstractStorage implements Storage {
         if (isExistPointer(uuid)) {
             throw new ExistStorageException(uuid);
         }
-        insertIntoStorage(resume, getPointerToResume(uuid));
+        insertIntoAbstractStorage(resume, getPointerToResume(uuid));
     }
 
     @Override
     public void delete(String uuid) {
         if (isExistPointer(uuid)) {
-            deleteElementByPointer(getPointerToResume(uuid));
+            deleteElementByPointerFromAbstractStorage(getPointerToResume(uuid));
             return;
         }
         throw new NotExistStorageException(uuid);
@@ -44,15 +44,13 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract Resume getResumeByPointer(Object pointer);
 
-    protected abstract void deleteElementByPointer(Object pointer);
+    protected abstract void deleteElementByPointerFromAbstractStorage(Object pointer);
 
     protected abstract boolean isExistPointer(String uuid);
 
     protected abstract Object getPointerToResume(String uuid);
 
-    protected abstract void insertIntoStorage(Resume resume, Object pointer);
-
     protected abstract void updateByPointer(Object pointer, Resume resume);
 
-
+    protected abstract void insertIntoAbstractStorage(Resume resume, Object pointerToResume);
 }

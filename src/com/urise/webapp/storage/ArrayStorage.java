@@ -10,24 +10,24 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected void insertIntoStorage(Resume resume, Object pointer) {
         storage[size] = resume;
-        size++;
     }
 
     @Override
     protected void deleteElementByPointer(Object pointer) {
         storage[(Integer) pointer] = storage[size - 1];
         storage[size - 1] = null;
-        size--;
     }
 
     @Override
     protected Object getPointerToResume(String uuid) {
+        Integer result = null;
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                return new Integer(i);
+                result = i;
+                return result;
             }
         }
-        return new Integer(-1);
+        return result;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void deleteElementByPointer(Object pointer) {
+    protected void deleteElementByPointerFromAbstractStorage(Object pointer) {
         int index = (Integer) pointer;
         storage.remove(index);
     }
@@ -23,7 +24,7 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected boolean isExistPointer(String uuid) {
         Integer index = (Integer) getPointerToResume(uuid);
-        return  index != null && index >= 0;
+        return index != null && index >= 0;
     }
 
     @Override
@@ -39,16 +40,16 @@ public class ListStorage extends AbstractStorage {
         return result;
     }
 
-
-    @Override
-    protected void insertIntoStorage(Resume resume, Object pointer) {
-        storage.add(resume);
-    }
-
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
         int index = (Integer) pointer;
-        storage.set(index,resume);
+        storage.set(index, resume);
+    }
+
+    @Override
+    protected void insertIntoAbstractStorage(Resume resume, Object pointerToResume) {
+        storage.add(resume);
+
     }
 
     public void clear() {
@@ -72,4 +73,5 @@ public class ListStorage extends AbstractStorage {
     public void showStorageInfo() {
         System.out.println("Хранилище на основе ArrayList");
     }
+
 }

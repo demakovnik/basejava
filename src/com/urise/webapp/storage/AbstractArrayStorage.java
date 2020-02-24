@@ -1,6 +1,7 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -39,6 +40,24 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected boolean isExistPointer(String uuid) {
         Integer index = (Integer) getPointerToResume(uuid);
-        return  index != null && index >= 0;
+        return index != null && index >= 0;
     }
+
+    @Override
+    protected void insertIntoAbstractStorage(Resume resume, Object pointer) {
+        insertIntoStorage(resume, pointer);
+        size++;
+    }
+
+    @Override
+    protected void deleteElementByPointerFromAbstractStorage(Object pointer) {
+        deleteElementByPointer(pointer);
+        size--;
+    }
+
+    protected abstract void insertIntoStorage(Resume resume, Object pointer);
+
+    protected abstract void deleteElementByPointer(Object pointer);
+
+
 }
