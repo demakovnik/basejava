@@ -1,32 +1,38 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
-
 import java.util.Arrays;
+
 
 /**
  * Array based storage for Resumes
  */
+
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public int getIndexOfResume(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, size, searchKey);
+    protected void insertIntoStorage(Resume resume, Object pointer) {
+        int index = -((Integer) pointer) - 1;
+        System.arraycopy(storage, index, storage, index + 1, size - index);
+        storage[index] = resume;
+        size++;
     }
 
     @Override
-    protected void baseDeleteElement(int index) {
+    protected void deleteElementByPointer(Object pointer) {
+        int index = (Integer) pointer;
         int shiftIndex = size - index - 1;
         if (shiftIndex > 0) {
             System.arraycopy(storage, index + 1, storage, index, shiftIndex);
         }
+        storage[size - 1] = null;
+        size--;
     }
 
     @Override
-    protected void insertIntoArray(Resume resume, int index) {
-        index = -index - 1;
-        System.arraycopy(storage, index, storage, index + 1, size - index);
-        storage[index] = resume;
+    protected Object getPointerToResume(String uuid) {
+        Resume searchKey = new Resume(uuid);
+        return new Integer(Arrays.binarySearch(storage, 0, size, searchKey));
     }
 }
+
