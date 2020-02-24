@@ -34,5 +34,10 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         Resume searchKey = new Resume(uuid);
         return new Integer(Arrays.binarySearch(storage, 0, size, searchKey));
     }
+
+    @Override
+    public void showStorageInfo() {
+        System.out.println("Хранилище на основе отсортированного массива");
+    }
 }
 

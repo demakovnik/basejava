@@ -29,4 +29,9 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
         return new Integer(-1);
     }
+
+    @Override
+    public void showStorageInfo() {
+        System.out.println("Хранилище на основе массива");
+    }
 }

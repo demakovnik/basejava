@@ -6,13 +6,11 @@ import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected int size;
-
     @Override
     public void update(Resume resume) {
-        Object pointer = getPointerToResume(resume.getUuid());
-        if (isExistPointer(pointer)) {
-            updateByPointer(pointer, resume);
+        String uuid = resume.getUuid();
+        if (isExistPointer(uuid)) {
+            updateByPointer(getPointerToResume(uuid), resume);
             return;
         }
         throw new NotExistStorageException(resume.getUuid());
@@ -20,18 +18,17 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        Object pointer = getPointerToResume(resume.getUuid());
-        if (isExistPointer(pointer)) {
-            throw new ExistStorageException(resume.getUuid());
+        String uuid = resume.getUuid();
+        if (isExistPointer(uuid)) {
+            throw new ExistStorageException(uuid);
         }
-        insertIntoStorage(resume, pointer);
+        insertIntoStorage(resume, getPointerToResume(uuid));
     }
 
     @Override
     public void delete(String uuid) {
-        Object pointer = getPointerToResume(uuid);
-        if (isExistPointer(pointer)) {
-            deleteElementByPointer(pointer);
+        if (isExistPointer(uuid)) {
+            deleteElementByPointer(getPointerToResume(uuid));
             return;
         }
         throw new NotExistStorageException(uuid);
@@ -39,9 +36,8 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        Object pointer = getPointerToResume(uuid);
-        if (isExistPointer(pointer)) {
-            return getResumeByPointer(pointer);
+        if (isExistPointer(uuid)) {
+            return getResumeByPointer(getPointerToResume(uuid));
         }
         throw new NotExistStorageException(uuid);
     }
@@ -50,11 +46,13 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void deleteElementByPointer(Object pointer);
 
-    protected abstract boolean isExistPointer(Object pointer);
+    protected abstract boolean isExistPointer(String uuid);
 
     protected abstract Object getPointerToResume(String uuid);
 
     protected abstract void insertIntoStorage(Resume resume, Object pointer);
 
     protected abstract void updateByPointer(Object pointer, Resume resume);
+
+
 }

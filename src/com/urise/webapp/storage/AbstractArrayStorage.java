@@ -8,6 +8,7 @@ import java.util.Arrays;
  */
 public abstract class AbstractArrayStorage extends AbstractStorage {
 
+    protected int size;
     protected static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
@@ -36,7 +37,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExistPointer(Object pointer) {
-        return (((Integer) pointer) >= 0);
+    protected boolean isExistPointer(String uuid) {
+        Integer index = (Integer) getPointerToResume(uuid);
+        return  index != null && index >= 0;
     }
 }

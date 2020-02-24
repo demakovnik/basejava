@@ -18,37 +18,39 @@ public class ListStorage extends AbstractStorage {
     protected void deleteElementByPointer(Object pointer) {
         int index = (Integer) pointer;
         storage.remove(index);
-        size = storage.size();
     }
 
     @Override
-    protected boolean isExistPointer(Object pointer) {
-        return (pointer != null && ((Integer) pointer) >= 0);
+    protected boolean isExistPointer(String uuid) {
+        Integer index = (Integer) getPointerToResume(uuid);
+        return  index != null && index >= 0;
     }
 
     @Override
     protected Object getPointerToResume(String uuid) {
-        for (Resume resume: storage) {
-            if (uuid.equals(resume.getUuid()))
-                return new Integer(storage.indexOf(resume));
+        int size = storage.size();
+        Integer result = null;
+        for (int i = 0; i < size; i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                result = i;
+                return result;
+            }
         }
-        return new Integer(-1);
+        return result;
     }
+
 
     @Override
     protected void insertIntoStorage(Resume resume, Object pointer) {
         storage.add(resume);
-        size = storage.size();
     }
 
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
         int index = (Integer) pointer;
-        storage.remove(index);
-        storage.add(index, resume);
+        storage.set(index,resume);
     }
 
-    @Override
     public void clear() {
         storage.clear();
 
@@ -64,5 +66,10 @@ public class ListStorage extends AbstractStorage {
     @Override
     public int size() {
         return storage.size();
+    }
+
+    @Override
+    public void showStorageInfo() {
+        System.out.println("Хранилище на основе ArrayList");
     }
 }
