@@ -19,7 +19,7 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        if (this.getClass() == AbstractArrayStorage.class && size() == AbstractArrayStorage.STORAGE_LIMIT) {
+        if (this.getClass() == AbstractArrayStorage.class && size() > AbstractArrayStorage.STORAGE_LIMIT) {
             throw new StorageException("Хранилище резюме заполнено", resume.getUuid());
         } else {
             String uuid = resume.getUuid();
