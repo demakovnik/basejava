@@ -16,7 +16,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         int index = -((Integer) pointer) - 1;
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = resume;
-        size++;
     }
 
     @Override
@@ -27,7 +26,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             System.arraycopy(storage, index + 1, storage, index, shiftIndex);
         }
         storage[size - 1] = null;
-        size--;
     }
 
     @Override
@@ -41,4 +39,3 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         System.out.println("Хранилище на основе отсортированного массива");
     }
 }
-
