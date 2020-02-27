@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -44,7 +45,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected void insertIntoStorage(Resume resume, Object pointer) {
         if (size == STORAGE_LIMIT) {
-            throw new StorageException("Хранилище заполнено.",resume.getUuid());
+            throw new StorageException("Хранилище заполнено.", resume.getUuid());
         }
         insertIntoArrayStorage(resume, pointer);
         size++;
@@ -57,9 +58,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size--;
     }
 
+    @Override
+    protected abstract Integer getPointerToResume(String uuid);
+
     protected abstract void deleteElementByPointerFromArrayStorage(Object pointer);
 
-
     protected abstract void insertIntoArrayStorage(Resume resume, Object pointer);
+
 
 }

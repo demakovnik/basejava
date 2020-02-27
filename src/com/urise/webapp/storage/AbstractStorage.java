@@ -26,26 +26,22 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        Object pointer = getPointerIfExistElement(resume.getUuid());
-        updateByPointer(pointer, resume);
+        updateByPointer(getPointerIfExistElement(resume.getUuid()), resume);
     }
 
     @Override
     public void save(Resume resume) {
-        Object pointer = getPointerIfNotExistElement(resume.getUuid());
-        insertIntoStorage(resume, pointer);
+        insertIntoStorage(resume, getPointerIfNotExistElement(resume.getUuid()));
     }
 
     @Override
     public void delete(String uuid) {
-        Object pointer = getPointerIfExistElement(uuid);
-        deleteElementByPointer(pointer);
+        deleteElementByPointer(getPointerIfExistElement(uuid));
     }
 
     @Override
     public Resume get(String uuid) {
-        Object pointer = getPointerIfExistElement(uuid);
-        return getResumeByPointer(pointer);
+        return getResumeByPointer(getPointerIfExistElement(uuid));
     }
 
     protected abstract Resume getResumeByPointer(Object pointer);
