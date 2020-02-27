@@ -20,6 +20,4 @@ public interface Storage {
     Resume[] getAll();
 
     int size();
-
-    void showStorageInfo();
 }

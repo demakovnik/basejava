@@ -67,7 +67,7 @@ public abstract class AbstractArrayStorageTest {
         storage.save(RESUME_1);
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = StorageException.class)
     public void saveOverflow() {
         try {
             for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {

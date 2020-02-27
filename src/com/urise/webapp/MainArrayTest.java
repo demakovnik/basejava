@@ -59,9 +59,6 @@ public class MainArrayTest {
                     STORAGE.update(resume);
                     printAll();
                     break;
-                case "info":
-                    STORAGE.showStorageInfo();
-                    break;
                 case "exit":
                     return;
                 default:

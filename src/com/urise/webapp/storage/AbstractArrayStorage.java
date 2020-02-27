@@ -44,7 +44,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected void insertIntoStorage(Resume resume, Object pointer) {
         if (size == STORAGE_LIMIT) {
-            throw new StorageException("Хранилище заполнено.");
+            throw new StorageException("Хранилище заполнено.",resume.getUuid());
         }
         insertIntoArrayStorage(resume, pointer);
         size++;
