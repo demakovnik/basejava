@@ -8,30 +8,23 @@ import com.urise.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void insertIntoStorage(Resume resume, Object pointer) {
-        storage[size] = resume;
-    }
-
-    @Override
-    protected void deleteElementByPointer(Object pointer) {
-        storage[(Integer) pointer] = storage[size - 1];
-        storage[size - 1] = null;
-    }
-
-    @Override
     protected Object getPointerToResume(String uuid) {
-        Integer result = null;
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                result = i;
-                return result;
+                return i;
             }
         }
-        return result;
+        return -1;
     }
 
     @Override
-    public void showStorageInfo() {
-        System.out.println("Хранилище на основе массива");
+    protected void deleteElementByPointerFromArrayStorage(Object pointer) {
+        storage[(Integer) pointer] = storage[size - 1];
+    }
+
+    @Override
+    protected void insertIntoArrayStorage(Resume resume, Object pointer) {
+        storage[size] = resume;
     }
 }
+

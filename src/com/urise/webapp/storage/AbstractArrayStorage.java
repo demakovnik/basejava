@@ -1,7 +1,7 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-
 import java.util.Arrays;
 
 /**
@@ -9,7 +9,6 @@ import java.util.Arrays;
  */
 public abstract class AbstractArrayStorage extends AbstractStorage {
 
-    protected int size;
     protected static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
@@ -38,26 +37,29 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExistPointer(String uuid) {
-        Integer index = (Integer) getPointerToResume(uuid);
-        return index != null && index >= 0;
+    protected boolean isExistPointer(Object pointer) {
+        return (((Integer) pointer) >= 0);
     }
 
     @Override
-    protected void insertIntoAbstractStorage(Resume resume, Object pointer) {
-        insertIntoStorage(resume, pointer);
+    protected void insertIntoStorage(Resume resume, Object pointer) {
+        if (size == STORAGE_LIMIT) {
+            throw new StorageException("Хранилище заполнено.");
+        }
+        insertIntoArrayStorage(resume, pointer);
         size++;
     }
 
     @Override
-    protected void deleteElementByPointerFromAbstractStorage(Object pointer) {
-        deleteElementByPointer(pointer);
+    protected void deleteElementByPointer(Object pointer) {
+        deleteElementByPointerFromArrayStorage(pointer);
+        storage[size - 1] = null;
         size--;
     }
 
-    protected abstract void insertIntoStorage(Resume resume, Object pointer);
+    protected abstract void deleteElementByPointerFromArrayStorage(Object pointer);
 
-    protected abstract void deleteElementByPointer(Object pointer);
 
+    protected abstract void insertIntoArrayStorage(Resume resume, Object pointer);
 
 }

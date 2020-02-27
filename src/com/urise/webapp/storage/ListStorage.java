@@ -1,7 +1,6 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,42 +15,42 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void deleteElementByPointerFromAbstractStorage(Object pointer) {
+    protected void deleteElementByPointer(Object pointer) {
         int index = (Integer) pointer;
         storage.remove(index);
+        size = storage.size();
     }
 
     @Override
-    protected boolean isExistPointer(String uuid) {
-        Integer index = (Integer) getPointerToResume(uuid);
-        return index != null && index >= 0;
+    protected boolean isExistPointer(Object pointer) {
+        return (pointer != null);
     }
 
     @Override
     protected Object getPointerToResume(String uuid) {
         int size = storage.size();
-        Integer result = null;
         for (int i = 0; i < size; i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
-                result = i;
-                return result;
+                return i;
             }
         }
-        return result;
+        return null;
+    }
+
+    @Override
+    protected void insertIntoStorage(Resume resume, Object pointer) {
+        storage.add(resume);
+        size = storage.size();
     }
 
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
         int index = (Integer) pointer;
-        storage.set(index, resume);
+        storage.remove(index);
+        storage.add(index, resume);
     }
 
     @Override
-    protected void insertIntoAbstractStorage(Resume resume, Object pointerToResume) {
-        storage.add(resume);
-
-    }
-
     public void clear() {
         storage.clear();
 
@@ -68,10 +67,4 @@ public class ListStorage extends AbstractStorage {
     public int size() {
         return storage.size();
     }
-
-    @Override
-    public void showStorageInfo() {
-        System.out.println("Хранилище на основе ArrayList");
-    }
-
 }
