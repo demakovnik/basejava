@@ -6,24 +6,6 @@ import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected int size;
-
-    protected Object getPointerIfExistElement(String uuid) {
-        Object pointer = getPointerToResume(uuid);
-        if (isExistPointer(pointer)) {
-            return pointer;
-        }
-        throw new NotExistStorageException(uuid);
-    }
-
-    protected Object getPointerIfNotExistElement(String uuid) {
-        Object pointer = getPointerToResume(uuid);
-        if (isExistPointer(pointer)) {
-            throw new ExistStorageException(uuid);
-        }
-        return pointer;
-    }
-
     @Override
     public void update(Resume resume) {
         updateByPointer(getPointerIfExistElement(resume.getUuid()), resume);
@@ -42,6 +24,22 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         return getResumeByPointer(getPointerIfExistElement(uuid));
+    }
+
+    private Object getPointerIfExistElement(String uuid) {
+        Object pointer = getPointerToResume(uuid);
+        if (isExistPointer(pointer)) {
+            return pointer;
+        }
+        throw new NotExistStorageException(uuid);
+    }
+
+    private Object getPointerIfNotExistElement(String uuid) {
+        Object pointer = getPointerToResume(uuid);
+        if (isExistPointer(pointer)) {
+            throw new ExistStorageException(uuid);
+        }
+        return pointer;
     }
 
     protected abstract Resume getResumeByPointer(Object pointer);

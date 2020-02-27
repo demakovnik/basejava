@@ -12,6 +12,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected int size;
 
     @Override
     public void clear() {
@@ -57,9 +58,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         storage[size - 1] = null;
         size--;
     }
-
-    @Override
-    protected abstract Integer getPointerToResume(String uuid);
 
     protected abstract void deleteElementByPointerFromArrayStorage(Object pointer);
 

@@ -19,7 +19,6 @@ public class ListStorage extends AbstractStorage {
     protected void deleteElementByPointer(Object pointer) {
         int index = (Integer) pointer;
         storage.remove(index);
-        size = storage.size();
     }
 
     @Override
@@ -40,15 +39,11 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void insertIntoStorage(Resume resume, Object pointer) {
-        storage.add(resume);
-        size = storage.size();
-    }
+        storage.add(resume); }
 
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
-        int index = (Integer) pointer;
-        storage.remove(index);
-        storage.add(index, resume);
+        storage.set((Integer) pointer, resume);
     }
 
     @Override
