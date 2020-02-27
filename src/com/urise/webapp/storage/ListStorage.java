@@ -28,7 +28,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getPointerToResume(String uuid) {
+    protected Integer getPointerToResume(String uuid) {
         int size = storage.size();
         for (int i = 0; i < size; i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
