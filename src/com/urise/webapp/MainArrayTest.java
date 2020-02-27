@@ -3,6 +3,7 @@ package com.urise.webapp;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.ArrayStorage;
 import com.urise.webapp.storage.ListStorage;
+import com.urise.webapp.storage.MapStorage;
 import com.urise.webapp.storage.Storage;
 
 import java.io.BufferedReader;
@@ -14,7 +15,7 @@ import java.io.InputStreamReader;
  * (just run, no need to understand)
  */
 public class MainArrayTest {
-    private final static Storage STORAGE = new ListStorage();
+    private final static Storage STORAGE = new MapStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

@@ -39,7 +39,8 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void insertIntoStorage(Resume resume, Object pointer) {
-        storage.add(resume); }
+        storage.add(resume);
+    }
 
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
