@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
  * (just run, no need to understand)
  */
 public class MainArrayTest {
-    private final static Storage STORAGE = new SortedArrayStorage();
+    private final static Storage STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
