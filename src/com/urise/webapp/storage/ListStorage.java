@@ -23,7 +23,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected boolean isExistPointer(Object pointer) {
-        return (pointer != null);
+        return pointer != null;
     }
 
     @Override

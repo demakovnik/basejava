@@ -9,17 +9,17 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected Resume getResumeByPointer(Object pointer) {
-        return storage.get(pointer);
+        return storage.get((String) pointer);
     }
 
     @Override
     protected void deleteElementByPointer(Object pointer) {
-        storage.remove(pointer);
+        storage.remove((String) pointer);
     }
 
     @Override
     protected boolean isExistPointer(Object pointer) {
-        return storage.containsKey(pointer);
+        return storage.containsKey((String) pointer);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
-        insertIntoStorage(resume, pointer);
+        insertIntoStorage(resume, (String) pointer);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class MapStorage extends AbstractStorage {
     @Override
     public Resume[] getAll() {
         ArrayList<Resume> list = new ArrayList<>(storage.values());
-        return list.toArray(new Resume[0]);
+        return list.toArray(new Resume[size()]);
     }
 
     @Override
