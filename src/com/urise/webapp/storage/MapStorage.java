@@ -34,7 +34,8 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
-        insertIntoStorage(resume, (String) pointer);
+        storage.remove((String) pointer);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
