@@ -3,6 +3,7 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -54,10 +55,10 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        Resume[] resumes = new Resume[storage.size()];
-        storage.toArray(resumes);
-        return resumes;
+    public List<Resume> getAllSorted() {
+        ArrayList<Resume> list = new ArrayList<>(storage);
+        Collections.sort(list);
+        return list;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class MainArray {
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
         ARRAY_STORAGE.save(r3);
-        ARRAY_STORAGE.save(r4);
+
         printAll();
         ARRAY_STORAGE.save(r4);
 
@@ -32,7 +32,7 @@ public class MainArray {
 
 
         System.out.println("Update r2: ");
-        ARRAY_STORAGE.update(r2);
+        ARRAY_STORAGE.update(r2.getUuid(),r4);
         printAll();
 
         ARRAY_STORAGE.delete(r1.getUuid());
@@ -45,7 +45,7 @@ public class MainArray {
 
     static void printAll() {
         System.out.println("\nGet All");
-        for (Resume r : ARRAY_STORAGE.getAll()) {
+        for (Resume r : ARRAY_STORAGE.getAllSorted()) {
             System.out.println(r);
         }
     }

@@ -2,7 +2,6 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,20 +10,20 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class AbstractStorageTest {
-    private final Storage storage;
-    private final static String UUID1 = "uuid1";
-    private final static String UUID2 = "uuid2";
-    private final static String UUID3 = "uuid3";
-    private final static String UUID4 = "uuid4";
+    protected final Storage storage;
+    private final static String NAME1 = "name1";
+    private final static String NAME2 = "name2";
+    private final static String NAME3 = "name3";
+    private final static String NAME4 = "name4";
     private final static String DUMMY = "dummy";
 
-    private final static Resume RESUME_1 = new Resume(UUID1);
-    private final static Resume RESUME_2 = new Resume(UUID2);
-    private final static Resume RESUME_3 = new Resume(UUID3);
-    private final static Resume RESUME_4 = new Resume(UUID4);
+    private final static Resume RESUME_1 = new Resume(NAME1);
+    private final static Resume RESUME_2 = new Resume(NAME2);
+    private final static Resume RESUME_3 = new Resume(NAME3);
+    private final static Resume RESUME_4 = new Resume(NAME4);
     private final static Resume RESUME_DUMMY = new Resume(DUMMY);
 
-    protected AbstractStorageTest(Storage storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -44,14 +43,14 @@ public class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updateResume = new Resume(UUID1);
-        storage.update(updateResume);
-        Assert.assertSame(updateResume, storage.get(UUID1));
+        Resume updateResume = RESUME_4;
+        storage.update(RESUME_1.getUuid(), updateResume);
+        Assert.assertSame(updateResume, storage.get(RESUME_1.getUuid()));
     }
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.update(RESUME_DUMMY);
+        storage.update(RESUME_DUMMY.getUuid(), RESUME_DUMMY);
     }
 
     @Test
@@ -66,23 +65,12 @@ public class AbstractStorageTest {
         storage.save(RESUME_1);
     }
 
-    @Test(expected = StorageException.class)
-    public void saveOverflow() {
-        try {
-            for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                storage.save(new Resume());
-            }
-        } catch (StorageException ex) {
-            Assert.fail("Storage overflow!");
-        }
-        storage.save(new Resume());
-    }
-
     @Test(expected = NotExistStorageException.class)
     public void delete() {
-        storage.delete(UUID2);
-        assertEquals(2, storage.getAll().length);
-        storage.get(UUID2);
+        String deletingUuid = RESUME_2.getUuid();
+        storage.delete(deletingUuid);
+        assertEquals(2, storage.getAllSorted().size());
+        storage.get(deletingUuid);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -92,7 +80,7 @@ public class AbstractStorageTest {
 
     @Test
     public void get() {
-        Resume result = storage.get(UUID2);
+        Resume result = storage.get(RESUME_2.getUuid());
         Assert.assertEquals(RESUME_2, result);
     }
 
@@ -101,13 +89,14 @@ public class AbstractStorageTest {
         storage.get(DUMMY);
     }
 
-    @Test
+    /*@Test
     public void getAll() {
-        Resume[] expectedArray = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
-        Resume[] actualArray = storage.getAll();
-        assertEquals(3, actualArray.length);
-        Assert.assertArrayEquals(expectedArray, actualArray);
-    }
+        Resume[] array = storage.getAllSorted().toArray();
+        assertEquals(3, array.length);
+        assertEquals(RESUME_1, array[0]);
+        assertEquals(RESUME_2, array[1]);
+        assertEquals(RESUME_3, array[2]);
+    }*/
 
     @Test
     public void size() {

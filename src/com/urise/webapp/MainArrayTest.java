@@ -1,35 +1,41 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.MapStorage;
-import com.urise.webapp.storage.SortedArrayStorage;
-import com.urise.webapp.storage.Storage;
+import com.urise.webapp.storage.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * Interactive test for ArrayStorage implementation
  * (just run, no need to understand)
  */
 public class MainArrayTest {
-    private final static Storage STORAGE = new SortedArrayStorage();
+    private final static Storage STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume resume;
         while (true) {
-            System.out.print("Введите одну из команд - (list | save uuid | delete uuid | get uuid | clear | update uuid | exit | info): ");
+            System.out.print("Введите одну из команд - (list | save fullName | delete uuid | get uuid | clear | update uuid fullName | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
             if (params.length < 1 || params.length > 3) {
                 System.out.println("Неверная команда.");
                 continue;
             }
             String uuid = null;
-            if (params.length == 2) {
+            String fullName = null;
+            if (params.length == 2 && !params[0].equals("save")) {
                 uuid = params[1].intern();
+            } else if (params.length == 3 && !params[0].equals("save")) {
+                uuid = params[1].intern();
+                fullName = params[2].intern();
+            } else if (params[0].equals("save")) {
+                fullName = params[1].intern();
             }
+
             switch (params[0]) {
                 case "list":
                     printAll();
@@ -38,7 +44,7 @@ public class MainArrayTest {
                     System.out.println(STORAGE.size());
                     break;
                 case "save":
-                    resume = new Resume(uuid);
+                    resume = new Resume(fullName);
                     STORAGE.save(resume);
                     printAll();
                     break;
@@ -54,8 +60,8 @@ public class MainArrayTest {
                     printAll();
                     break;
                 case "update":
-                    resume = new Resume(uuid);
-                    STORAGE.update(resume);
+                    resume = new Resume(uuid, fullName);
+                    STORAGE.update(uuid, resume);
                     printAll();
                     break;
                 case "exit":
@@ -68,9 +74,9 @@ public class MainArrayTest {
     }
 
     static void printAll() {
-        Resume[] all = STORAGE.getAll();
+        List<Resume> all = STORAGE.getAllSorted();
         System.out.println("----------------------------");
-        if (all.length == 0) {
+        if (all.size() == 0) {
             System.out.println("Empty");
         } else {
             for (Resume r : all) {

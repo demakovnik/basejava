@@ -4,11 +4,16 @@ import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class AbstractStorage implements Storage {
 
+    protected Storage storage;
+
     @Override
-    public void update(Resume resume) {
-        updateByPointer(getPointerIfExistElement(resume.getUuid()), resume);
+    public void update(String uuid, Resume resume) {
+        updateByPointer(getPointerIfExistElement(uuid), resume);
     }
 
     @Override
