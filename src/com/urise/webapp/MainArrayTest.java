@@ -13,7 +13,7 @@ import java.util.List;
  * (just run, no need to understand)
  */
 public class MainArrayTest {
-    private final static Storage STORAGE = new ArrayStorage();
+    private final static Storage STORAGE = new ListStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

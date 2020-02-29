@@ -39,7 +39,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected boolean isExistPointer(Object pointer) {
-        return pointer != null && (Integer) pointer >= 0 ;
+        return pointer != null && (Integer) pointer >= 0;
     }
 
     @Override
@@ -59,11 +59,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>(size);
-        Collections.addAll(result, Arrays.copyOfRange(storage, 0, size));
-        Collections.sort(result);
-        return result;
+    protected void sortTheList(List<Resume> list) {
+        Collections.addAll(list, Arrays.copyOfRange(storage, 0, size));
+        Collections.sort(list, AbstractStorage.COMPARATOR);
+    }
+
+    @Override
+    protected List<Resume> getList() {
+        return new ArrayList<>(size);
     }
 
     protected abstract void deleteElementByPointerFromArrayStorage(Object pointer);
