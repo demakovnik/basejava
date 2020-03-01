@@ -2,39 +2,43 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
+public class MapStorageResumeKey extends AbstractStorage {
     private Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected Resume getResumeByPointer(Object pointer) {
-        return storage.get((String) pointer);
+        return (Resume) pointer;
     }
 
     @Override
     protected void deleteElementByPointer(Object pointer) {
-        storage.remove((String) pointer);
+        storage.remove(((Resume) pointer).getUuid());
     }
 
     @Override
     protected boolean isExistPointer(Object pointer) {
-        return storage.containsKey((String) pointer);
+        return pointer != null;
     }
 
     @Override
-    protected String getPointerToResume(String uuid) {
-        return uuid;
+    protected Resume getPointerToResume(String uuid) {
+        return storage.get(uuid);
     }
 
     @Override
     protected void insertIntoStorage(Resume resume, Object pointer) {
-        storage.put((String) pointer, resume);
+
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
-        storage.remove((String) pointer);
+        storage.remove(((Resume) pointer).getUuid());
         storage.put(resume.getUuid(), resume);
     }
 
@@ -46,11 +50,6 @@ public class MapStorage extends AbstractStorage {
     @Override
     public int size() {
         return storage.size();
-    }
-
-    @Override
-    protected void sortTheList(List<Resume> list) {
-        Collections.sort(list, AbstractStorage.COMPARATOR);
     }
 
     @Override

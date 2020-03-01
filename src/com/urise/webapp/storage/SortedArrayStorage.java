@@ -24,9 +24,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected Object getPointerToResume(String uuid) {
-        return new Integer(Arrays.binarySearch(storage, 0, size, new Resume(uuid, ""),
-                Comparator.comparing(Resume::getUuid)));
+    protected Integer getPointerToResume(String uuid) {
+        return Arrays.binarySearch(storage, 0, size, new Resume(uuid, ""),
+                Comparator.comparing(Resume::getUuid));
     }
 }
 

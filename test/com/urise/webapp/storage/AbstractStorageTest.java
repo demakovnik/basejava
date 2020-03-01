@@ -7,9 +7,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
-public class AbstractStorageTest {
+public abstract class AbstractStorageTest {
     protected final Storage storage;
     private final static String NAME1 = "name1";
     private final static String NAME2 = "name2";
@@ -23,16 +25,16 @@ public class AbstractStorageTest {
     private final static Resume RESUME_4 = new Resume(NAME4);
     private final static Resume RESUME_DUMMY = new Resume(DUMMY);
 
-    public AbstractStorageTest(Storage storage) {
+    protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
     @Before
     public void setUp() {
         storage.clear();
-        storage.save(RESUME_1);
-        storage.save(RESUME_2);
         storage.save(RESUME_3);
+        storage.save(RESUME_2);
+        storage.save(RESUME_1);
     }
 
     @Test
@@ -89,18 +91,17 @@ public class AbstractStorageTest {
         storage.get(DUMMY);
     }
 
-    /*@Test
+    @Test
     public void getAll() {
-        Resume[] array = storage.getAllSorted().toArray();
-        assertEquals(3, array.length);
-        assertEquals(RESUME_1, array[0]);
-        assertEquals(RESUME_2, array[1]);
-        assertEquals(RESUME_3, array[2]);
-    }*/
+        List<Resume> list = storage.getAllSorted();
+        assertEquals(3, list.size());
+        assertEquals(RESUME_1, list.get(0));
+        assertEquals(RESUME_2, list.get(1));
+        assertEquals(RESUME_3, list.get(2));
+    }
 
     @Test
     public void size() {
         Assert.assertEquals(3, storage.size());
     }
-
 }

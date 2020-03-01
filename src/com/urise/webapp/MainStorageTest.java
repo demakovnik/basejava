@@ -12,8 +12,8 @@ import java.util.List;
  * Interactive test for ArrayStorage implementation
  * (just run, no need to understand)
  */
-public class MainArrayTest {
-    private final static Storage STORAGE = new ListStorage();
+public class MainStorageTest {
+    private final static Storage STORAGE = new MapStorageResumeKey();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

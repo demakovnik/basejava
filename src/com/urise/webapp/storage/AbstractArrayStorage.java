@@ -59,19 +59,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void sortTheList(List<Resume> list) {
-        Collections.addAll(list, Arrays.copyOfRange(storage, 0, size));
-        Collections.sort(list, AbstractStorage.COMPARATOR);
-    }
-
-    @Override
     protected List<Resume> getList() {
-        return new ArrayList<>(size);
+        List<Resume> result = new ArrayList<>();
+        Collections.addAll(result, Arrays.copyOfRange(storage, 0, size));
+        return result;
     }
 
     protected abstract void deleteElementByPointerFromArrayStorage(Object pointer);
 
     protected abstract void insertIntoArrayStorage(Resume resume, Object pointer);
-
-
 }
