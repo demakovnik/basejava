@@ -15,12 +15,12 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void deleteElementByPointerFromArrayStorage(Object pointer) {
-        storage[(Integer) pointer] = storage[size - 1];
+    protected void deleteElementByPointerFromArrayStorage(Integer pointer) {
+        storage[pointer] = storage[size - 1];
     }
 
     @Override
-    protected void insertIntoArrayStorage(Resume resume, Object pointer) {
+    protected void insertIntoArrayStorage(Resume resume, Integer pointer) {
         storage[size] = resume;
     }
 }

@@ -5,24 +5,24 @@ import com.urise.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
 
     private List<Resume> storage = new ArrayList<>();
 
     @Override
-    protected Resume getResumeByPointer(Object pointer) {
-        int index = (Integer) pointer;
+    protected Resume getResumeByPointer(Integer pointer) {
+        int index = pointer;
         return storage.get(index);
     }
 
     @Override
-    protected void deleteElementByPointer(Object pointer) {
-        int index = (Integer) pointer;
+    protected void deleteElementByPointer(Integer pointer) {
+        int index = pointer;
         storage.remove(index);
     }
 
     @Override
-    protected boolean isExistPointer(Object pointer) {
+    protected boolean isExistPointer(Integer pointer) {
         return pointer != null;
     }
 
@@ -38,13 +38,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void insertIntoStorage(Resume resume, Object pointer) {
+    protected void insertIntoStorage(Resume resume, Integer pointer) {
         storage.add(resume);
     }
 
     @Override
-    protected void updateByPointer(Object pointer, Resume resume) {
-        storage.set((Integer) pointer, resume);
+    protected void updateByPointer(Integer pointer, Resume resume) {
+        storage.set(pointer, resume);
     }
 
     @Override

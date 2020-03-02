@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     protected static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -29,22 +29,22 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getResumeByPointer(Object pointer) {
-        return storage[(Integer) pointer];
+    protected Resume getResumeByPointer(Integer pointer) {
+        return storage[pointer];
     }
 
     @Override
-    protected void updateByPointer(Object pointer, Resume resume) {
-        storage[(Integer) pointer] = resume;
+    protected void updateByPointer(Integer pointer, Resume resume) {
+        storage[pointer] = resume;
     }
 
     @Override
-    protected boolean isExistPointer(Object pointer) {
-        return (Integer) pointer >= 0;
+    protected boolean isExistPointer(Integer pointer) {
+        return pointer >= 0;
     }
 
     @Override
-    protected void insertIntoStorage(Resume resume, Object pointer) {
+    protected void insertIntoStorage(Resume resume, Integer pointer) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Хранилище заполнено.", resume.getUuid());
         }
@@ -53,7 +53,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void deleteElementByPointer(Object pointer) {
+    protected void deleteElementByPointer(Integer pointer) {
         deleteElementByPointerFromArrayStorage(pointer);
         storage[size - 1] = null;
         size--;
@@ -64,7 +64,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 
-    protected abstract void deleteElementByPointerFromArrayStorage(Object pointer);
+    protected abstract void deleteElementByPointerFromArrayStorage(Integer pointer);
 
-    protected abstract void insertIntoArrayStorage(Resume resume, Object pointer);
+    protected abstract void insertIntoArrayStorage(Resume resume, Integer pointer);
 }

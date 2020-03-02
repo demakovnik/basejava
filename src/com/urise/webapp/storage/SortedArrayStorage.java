@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void deleteElementByPointerFromArrayStorage(Object pointer) {
+    protected void deleteElementByPointerFromArrayStorage(Integer pointer) {
         int index = (Integer) pointer;
         int shiftIndex = size - index - 1;
         if (shiftIndex > 0) {
@@ -17,7 +17,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insertIntoArrayStorage(Resume resume, Object pointer) {
+    protected void insertIntoArrayStorage(Resume resume, Integer pointer) {
         int index = -((Integer) pointer) - 1;
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = resume;

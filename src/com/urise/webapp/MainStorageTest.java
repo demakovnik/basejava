@@ -74,14 +74,11 @@ public class MainStorageTest {
     }
 
     static void printAll() {
-        List<Resume> all = STORAGE.getAllSorted();
         System.out.println("----------------------------");
-        if (all.size() == 0) {
+        if (STORAGE.size() == 0) {
             System.out.println("Empty");
         } else {
-            for (Resume r : all) {
-                System.out.println(r);
-            }
+            STORAGE.getAllSorted().stream().forEach(System.out::println);
         }
         System.out.println("----------------------------");
     }

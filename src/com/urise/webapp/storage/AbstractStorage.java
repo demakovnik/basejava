@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
 
     protected static final Comparator<Resume> COMPARATOR = Comparator.comparing(Resume::getFullName).
             thenComparing(Resume::getUuid);
@@ -33,16 +33,16 @@ public abstract class AbstractStorage implements Storage {
         return getResumeByPointer(getPointerIfExistElement(uuid));
     }
 
-    private Object getPointerIfExistElement(String uuid) {
-        Object pointer = getPointerToResume(uuid);
+    private SK getPointerIfExistElement(String uuid) {
+        SK pointer = getPointerToResume(uuid);
         if (isExistPointer(pointer)) {
             return pointer;
         }
         throw new NotExistStorageException(uuid);
     }
 
-    private Object getPointerIfNotExistElement(String uuid) {
-        Object pointer = getPointerToResume(uuid);
+    private SK getPointerIfNotExistElement(String uuid) {
+        SK pointer = getPointerToResume(uuid);
         if (isExistPointer(pointer)) {
             throw new ExistStorageException(uuid);
         }
@@ -56,15 +56,15 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract List<Resume> getList();
 
-    protected abstract Resume getResumeByPointer(Object pointer);
+    protected abstract Resume getResumeByPointer(SK pointer);
 
-    protected abstract void deleteElementByPointer(Object pointer);
+    protected abstract void deleteElementByPointer(SK pointer);
 
-    protected abstract boolean isExistPointer(Object pointer);
+    protected abstract boolean isExistPointer(SK pointer);
 
-    protected abstract Object getPointerToResume(String uuid);
+    protected abstract SK getPointerToResume(String uuid);
 
-    protected abstract void insertIntoStorage(Resume resume, Object pointer);
+    protected abstract void insertIntoStorage(Resume resume, SK pointer);
 
-    protected abstract void updateByPointer(Object pointer, Resume resume);
+    protected abstract void updateByPointer(SK pointer, Resume resume);
 }
