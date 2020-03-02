@@ -13,7 +13,7 @@ import java.util.List;
  * (just run, no need to understand)
  */
 public class MainStorageTest {
-    private final static Storage STORAGE = new MapStorageUuidKey();
+    private final static Storage STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -29,7 +29,7 @@ public class MainStorageTest {
             String fullName = null;
             if (params.length == 2 && !params[0].equals("save")) {
                 uuid = params[1].intern();
-            } else if (params.length == 3 && !params[0].equals("save")) {
+            } else if (params.length == 3) {
                 uuid = params[1].intern();
                 fullName = params[2].intern();
             } else if (params[0].equals("save")) {

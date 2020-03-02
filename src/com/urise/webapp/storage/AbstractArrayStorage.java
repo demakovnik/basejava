@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Array based storage for Resumes
@@ -60,9 +61,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected List<Resume> getList() {
-        List<Resume> result = new ArrayList<>();
-        Collections.addAll(result, Arrays.copyOfRange(storage, 0, size));
-        return result;
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 
     protected abstract void deleteElementByPointerFromArrayStorage(Object pointer);
