@@ -45,14 +45,14 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updateResume = RESUME_4;
-        storage.update(RESUME_2.getUuid(), updateResume);
-        Assert.assertSame(updateResume, storage.get(RESUME_4.getUuid()));
+        Resume updateResume = RESUME_2;
+        storage.update(updateResume);
+        Assert.assertSame(updateResume, storage.get(RESUME_2.getUuid()));
     }
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.update(RESUME_DUMMY.getUuid(), RESUME_DUMMY);
+        storage.update(RESUME_DUMMY);
     }
 
     @Test

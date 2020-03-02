@@ -39,7 +39,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected boolean isExistPointer(Object pointer) {
-        return pointer != null && (Integer) pointer >= 0;
+        return (Integer) pointer >= 0;
     }
 
     @Override

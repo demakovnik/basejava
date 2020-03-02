@@ -13,7 +13,7 @@ import java.util.List;
  * (just run, no need to understand)
  */
 public class MainStorageTest {
-    private final static Storage STORAGE = new MapStorageResumeKey();
+    private final static Storage STORAGE = new MapStorageUuidKey();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -61,7 +61,7 @@ public class MainStorageTest {
                     break;
                 case "update":
                     resume = new Resume(uuid, fullName);
-                    STORAGE.update(uuid, resume);
+                    STORAGE.update(resume);
                     printAll();
                     break;
                 case "exit":

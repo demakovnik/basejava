@@ -34,7 +34,6 @@ public class MapStorageUuidKey extends AbstractStorage {
 
     @Override
     protected void updateByPointer(Object pointer, Resume resume) {
-        storage.remove((String) pointer);
         storage.put(resume.getUuid(), resume);
     }
 

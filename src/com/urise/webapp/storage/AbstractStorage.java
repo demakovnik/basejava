@@ -13,8 +13,8 @@ public abstract class AbstractStorage implements Storage {
     protected static final Comparator<Resume> COMPARATOR = Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
     @Override
-    public void update(String uuid, Resume resume) {
-        updateByPointer(getPointerIfExistElement(uuid), resume);
+    public void update(Resume resume) {
+        updateByPointer(getPointerIfExistElement(resume.getUuid()), resume);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class MainArray {
 
 
         System.out.println("Update r2: ");
-        ARRAY_STORAGE.update(r2.getUuid(), r4);
+        ARRAY_STORAGE.update(r4);
         printAll();
 
         ARRAY_STORAGE.delete(r1.getUuid());
