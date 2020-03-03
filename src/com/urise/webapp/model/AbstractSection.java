@@ -3,18 +3,18 @@ package com.urise.webapp.model;
 
 public abstract class AbstractSection {
     private final SectionType title;
-    private final Object property;
+    private final Object composition;
 
-    protected AbstractSection(SectionType title, Object property) {
+    protected AbstractSection(SectionType title, Object composition) {
         this.title = title;
-        this.property = property;
+        this.composition = composition;
     }
 
     public SectionType getTitle() {
         return title;
     }
 
-    public Object getProperty() {
-        return property;
+    public Object getComposition() {
+        return composition;
     }
 }
