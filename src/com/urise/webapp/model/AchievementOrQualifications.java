@@ -1,24 +1,31 @@
 package com.urise.webapp.model;
 
 import java.util.List;
+import java.util.Objects;
 
-public class AchievementOrQualifications extends AbstractSection<List<String>> {
+public class AchievementOrQualifications extends AbstractSection {
 
-    public AchievementOrQualifications(List<String> composition) {
-        super(composition);
+    private final List<String> listOfAchievementsOrQualifications;
+
+    public AchievementOrQualifications(List<String> listOfAchievementsOrQualifications) {
+        this.listOfAchievementsOrQualifications = listOfAchievementsOrQualifications;
+    }
+
+    public List<String> getListOfAchievementsOrQualifications() {
+        return listOfAchievementsOrQualifications;
     }
 
     @Override
-    public String getCompositionString() {
-        List<String> list = this.getComposition();
-        StringBuilder sb = new StringBuilder();
-        int size = getComposition().size();
-        for (int i = 0; i < size; i++) {
-            if (i < size - 1)
-                sb.append(list.get(i) + "\n");
-            else sb.append(list.get(i));
-        }
-        return sb.toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AchievementOrQualifications that = (AchievementOrQualifications) o;
+        return listOfAchievementsOrQualifications.equals(that.listOfAchievementsOrQualifications);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(listOfAchievementsOrQualifications);
     }
 }
 

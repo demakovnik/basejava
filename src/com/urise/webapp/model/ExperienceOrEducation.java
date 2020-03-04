@@ -1,24 +1,30 @@
 package com.urise.webapp.model;
 
 import java.util.List;
+import java.util.Objects;
 
-public class ExperienceOrEducation extends AbstractSection<List<Organization>> {
+public class ExperienceOrEducation extends AbstractSection {
 
-    public ExperienceOrEducation(List<Organization> composition) {
-        super(composition);
+    private final List<Organization> listOfExperienceOrEducation;
+
+    public ExperienceOrEducation(List<Organization> listOfExperienceOrEducation) {
+        this.listOfExperienceOrEducation = listOfExperienceOrEducation;
+    }
+
+    public List<Organization> getListOfExperienceOrEducation() {
+        return listOfExperienceOrEducation;
     }
 
     @Override
-    public String getCompositionString() {
-        List<Organization> list = this.getComposition();
-        StringBuilder sb = new StringBuilder();
-        int size = getComposition().size();
-        for (int i = 0; i < size; i++) {
-            if (i < size - 1)
-                sb.append(list.get(i) + "\n");
-            else sb.append(list.get(i));
-        }
-        return sb.toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExperienceOrEducation that = (ExperienceOrEducation) o;
+        return listOfExperienceOrEducation.equals(that.listOfExperienceOrEducation);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(listOfExperienceOrEducation);
+    }
 }
