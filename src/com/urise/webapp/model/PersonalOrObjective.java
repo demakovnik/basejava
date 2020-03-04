@@ -1,8 +1,13 @@
 package com.urise.webapp.model;
 
-public class PersonalOrObjective extends AbstractSection {
+public class PersonalOrObjective extends AbstractSection<String> {
 
-    public PersonalOrObjective(SectionType title, String composition) {
-        super(title, composition);
+    public PersonalOrObjective(String composition) {
+        super(composition);
+    }
+
+    @Override
+    public String getCompositionString() {
+        return getComposition();
     }
 }

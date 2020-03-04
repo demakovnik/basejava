@@ -1,20 +1,20 @@
 package com.urise.webapp.model;
 
+public abstract class AbstractSection<T> {
+    private final T composition;
 
-public abstract class AbstractSection {
-    private final SectionType title;
-    private final Object composition;
-
-    protected AbstractSection(SectionType title, Object composition) {
-        this.title = title;
+    protected AbstractSection(T composition) {
         this.composition = composition;
     }
 
-    public SectionType getTitle() {
-        return title;
+    public T getComposition() {
+        return composition;
     }
 
-    public Object getComposition() {
-        return composition;
+    protected abstract String getCompositionString();
+
+    @Override
+    public String toString() {
+        return getCompositionString();
     }
 }

@@ -2,11 +2,23 @@ package com.urise.webapp.model;
 
 import java.util.List;
 
-public class ExperienceOrEducation extends AbstractSection {
+public class ExperienceOrEducation extends AbstractSection<List<Organization>> {
 
+    public ExperienceOrEducation(List<Organization> composition) {
+        super(composition);
+    }
 
-    public ExperienceOrEducation(SectionType title, List<Organization> composition) {
-        super(title, composition);
+    @Override
+    public String getCompositionString() {
+        List<Organization> list = this.getComposition();
+        StringBuilder sb = new StringBuilder();
+        int size = getComposition().size();
+        for (int i = 0; i < size; i++) {
+            if (i < size - 1)
+                sb.append(list.get(i) + "\n");
+            else sb.append(list.get(i));
+        }
+        return sb.toString();
     }
 
 }

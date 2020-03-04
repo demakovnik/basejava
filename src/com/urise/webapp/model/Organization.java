@@ -1,19 +1,48 @@
 package com.urise.webapp.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Organization {
 
     private final String title;
-    private final String startTime;
-    private final String endTime;
+    private final String position;
+    private final LocalDate startTime;
+    private final LocalDate endTime;
     private final String description;
+    private final String url;
 
-    public Organization(String title, String startTime, String endTime, String description) {
+    public Organization(String title, String position, LocalDate startTime, LocalDate endTime, String description, String url) {
         this.title = title;
+        this.position = position;
         this.startTime = startTime;
         this.endTime = endTime;
         this.description = description;
+        this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public LocalDate getStartTime() {
+        return startTime;
+    }
+
+    public LocalDate getEndTime() {
+        return endTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     @Override
@@ -22,25 +51,27 @@ public class Organization {
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
         return title.equals(that.title) &&
+                Objects.equals(position, that.position) &&
                 startTime.equals(that.startTime) &&
-                endTime.equals(that.endTime) &&
-                description.equals(that.description);
+                Objects.equals(endTime, that.endTime) &&
+                description.equals(that.description) &&
+                Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, startTime, endTime, description);
+        return Objects.hash(title, position, startTime, endTime, description, url);
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public String getDescription() {
-        return description;
+    @Override
+    public String toString() {
+        return "Organization{" +
+                "title='" + title + '\'' +
+                ", position='" + position + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }
