@@ -27,4 +27,5 @@ public class ExperienceOrEducation extends AbstractSection {
     public int hashCode() {
         return Objects.hash(listOfExperienceOrEducation);
     }
+
 }

@@ -13,6 +13,10 @@ public class Organization {
     private final String url;
 
     public Organization(String title, String position, LocalDate startTime, LocalDate endTime, String description, String url) {
+
+        Objects.requireNonNull(title, "title must not be null");
+        Objects.requireNonNull(position, "position must not be null");
+        Objects.requireNonNull(startTime, "startTime must not be null");
         this.title = title;
         this.position = position;
         this.startTime = startTime;
@@ -51,10 +55,10 @@ public class Organization {
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
         return title.equals(that.title) &&
-                Objects.equals(position, that.position) &&
+                position.equals(that.position) &&
                 startTime.equals(that.startTime) &&
                 Objects.equals(endTime, that.endTime) &&
-                description.equals(that.description) &&
+                Objects.equals(description, that.description) &&
                 Objects.equals(url, that.url);
     }
 
