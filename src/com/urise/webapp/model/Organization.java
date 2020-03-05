@@ -67,4 +67,16 @@ public class Organization {
     public int hashCode() {
         return Objects.hash(title, position, startTime, endTime, description, url);
     }
+
+    @Override
+    public String toString() {
+        return "Organization{" +
+                "title='" + title + '\'' +
+                ", position='" + position + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }
