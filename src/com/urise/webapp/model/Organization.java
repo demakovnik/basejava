@@ -13,7 +13,6 @@ public class Organization {
     private final String url;
 
     public Organization(String title, String position, LocalDate startTime, LocalDate endTime, String description, String url) {
-
         Objects.requireNonNull(title, "title must not be null");
         Objects.requireNonNull(position, "position must not be null");
         Objects.requireNonNull(startTime, "startTime must not be null");
