@@ -2,11 +2,12 @@ package com.urise.webapp.model;
 
 import java.util.Objects;
 
-public class PersonalOrObjective extends AbstractSection {
+public class PersonalOrObjectiveSection extends AbstractSection {
 
     private final String text;
 
-    public PersonalOrObjective(String text) {
+    public PersonalOrObjectiveSection(String text) {
+        Objects.requireNonNull(text, "text must not be null");
         this.text = text;
     }
 
@@ -18,7 +19,7 @@ public class PersonalOrObjective extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PersonalOrObjective that = (PersonalOrObjective) o;
+        PersonalOrObjectiveSection that = (PersonalOrObjectiveSection) o;
         return text.equals(that.text);
     }
 

@@ -3,11 +3,12 @@ package com.urise.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class AchievementOrQualifications extends AbstractSection {
+public class AchievementOrQualificationsSection extends AbstractSection {
 
     private final List<String> listOfAchievementsOrQualifications;
 
-    public AchievementOrQualifications(List<String> listOfAchievementsOrQualifications) {
+    public AchievementOrQualificationsSection(List<String> listOfAchievementsOrQualifications) {
+        Objects.requireNonNull(listOfAchievementsOrQualifications, "listOfAchievementsOrQualifications must not be null");
         this.listOfAchievementsOrQualifications = listOfAchievementsOrQualifications;
     }
 
@@ -19,7 +20,7 @@ public class AchievementOrQualifications extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AchievementOrQualifications that = (AchievementOrQualifications) o;
+        AchievementOrQualificationsSection that = (AchievementOrQualificationsSection) o;
         return listOfAchievementsOrQualifications.equals(that.listOfAchievementsOrQualifications);
     }
 

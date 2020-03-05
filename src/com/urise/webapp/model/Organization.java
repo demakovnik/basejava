@@ -17,6 +17,7 @@ public class Organization {
         Objects.requireNonNull(title, "title must not be null");
         Objects.requireNonNull(position, "position must not be null");
         Objects.requireNonNull(startTime, "startTime must not be null");
+        Objects.requireNonNull(endTime, "endTime must not be null");
         this.title = title;
         this.position = position;
         this.startTime = startTime;
@@ -57,7 +58,7 @@ public class Organization {
         return title.equals(that.title) &&
                 position.equals(that.position) &&
                 startTime.equals(that.startTime) &&
-                Objects.equals(endTime, that.endTime) &&
+                endTime.equals(that.endTime) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(url, that.url);
     }
@@ -65,17 +66,5 @@ public class Organization {
     @Override
     public int hashCode() {
         return Objects.hash(title, position, startTime, endTime, description, url);
-    }
-
-    @Override
-    public String toString() {
-        return "Organization{" +
-                "title='" + title + '\'' +
-                ", position='" + position + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", description='" + description + '\'' +
-                ", url='" + url + '\'' +
-                '}';
     }
 }

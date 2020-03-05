@@ -3,11 +3,12 @@ package com.urise.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class ExperienceOrEducation extends AbstractSection {
+public class ExperienceOrEducationSection extends AbstractSection {
 
     private final List<Organization> listOfExperienceOrEducation;
 
-    public ExperienceOrEducation(List<Organization> listOfExperienceOrEducation) {
+    public ExperienceOrEducationSection(List<Organization> listOfExperienceOrEducation) {
+        Objects.requireNonNull(listOfExperienceOrEducation, "listOfExperienceOrEducation must not be null");
         this.listOfExperienceOrEducation = listOfExperienceOrEducation;
     }
 
@@ -19,7 +20,7 @@ public class ExperienceOrEducation extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ExperienceOrEducation that = (ExperienceOrEducation) o;
+        ExperienceOrEducationSection that = (ExperienceOrEducationSection) o;
         return listOfExperienceOrEducation.equals(that.listOfExperienceOrEducation);
     }
 
@@ -27,5 +28,4 @@ public class ExperienceOrEducation extends AbstractSection {
     public int hashCode() {
         return Objects.hash(listOfExperienceOrEducation);
     }
-
 }

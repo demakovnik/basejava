@@ -1,4 +1,4 @@
-package com.urise.webapp;
+package com.urise.webapp.storage;
 
 import com.urise.webapp.model.*;
 
@@ -18,8 +18,8 @@ public class ResumeTestData {
         resume.getContacts().put(ContactType.GITHUB, "https://github.com/gkislin");
         resume.getContacts().put(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         resume.getContacts().put(ContactType.HOMEPAGE, "http://gkislin.ru/");
-        resume.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjective("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
-        resume.getSections().put(SectionType.PERSONAL, new PersonalOrObjective("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
+        resume.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
+        resume.getSections().put(SectionType.PERSONAL, new PersonalOrObjectiveSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
         List<String> achievements = new ArrayList<>();
         achievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", " +
                 "\"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). " +
@@ -66,7 +66,7 @@ public class ResumeTestData {
          */
         List<Organization> organizations = new ArrayList<>();
         organizations.add(new Organization("Java Online Projects", "Автор проекта",
-                LocalDate.of(2013, 10, 1), null,
+                LocalDate.of(2013, 10, 1), LocalDate.now(),
                 "Создание, организация и проведение Java онлайн проектов и стажировок.", "http://javaops.ru/"));
         organizations.add(new Organization("Wrike", "Старший разработчик (backend)",
                 LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 31),
@@ -112,7 +112,7 @@ public class ResumeTestData {
          * Добавляем секцию организаций в резюме
          *
          */
-        resume.getSections().put(SectionType.EXPERIENCE, new ExperienceOrEducation(organizations));
+        resume.getSections().put(SectionType.EXPERIENCE, new ExperienceOrEducationSection(organizations));
 
         /**
          * Добавляем учебные заведения
@@ -147,9 +147,9 @@ public class ResumeTestData {
          * Добавляем секцию учебных заведений в резюме
          *
          */
-        resume.getSections().put(SectionType.EDUCATION, new ExperienceOrEducation(educationals));
-        resume.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualifications(achievements));
-        resume.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualifications(qualifications));
+        resume.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
+        resume.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
+        resume.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
         System.out.println(resume.getFullName());
         for (Map.Entry<ContactType, String> set : resume.getContacts().entrySet()) {
             System.out.println(set.getKey().getTitle() + ": " + set.getValue());
@@ -159,16 +159,16 @@ public class ResumeTestData {
             System.out.println(entry.getKey().getTitle() + "\n");
             Object value = entry.getValue();
 
-            if (value instanceof ExperienceOrEducation) {
-                List<Organization> list = ((ExperienceOrEducation) value).getListOfExperienceOrEducation();
+            if (value instanceof ExperienceOrEducationSection) {
+                List<Organization> list = ((ExperienceOrEducationSection) value).getListOfExperienceOrEducation();
                 for (Organization organization : list) {
                     System.out.println(organization);
                 }
-            } else if (value instanceof PersonalOrObjective) {
-                String text = ((PersonalOrObjective) value).getText();
+            } else if (value instanceof PersonalOrObjectiveSection) {
+                String text = ((PersonalOrObjectiveSection) value).getText();
                 System.out.println(text);
-            } else if (value instanceof AchievementOrQualifications) {
-                List<String> list = ((AchievementOrQualifications) value).getListOfAchievementsOrQualifications();
+            } else if (value instanceof AchievementOrQualificationsSection) {
+                List<String> list = ((AchievementOrQualificationsSection) value).getListOfAchievementsOrQualifications();
                 for (String text : list) {
                     System.out.println(text);
                 }
