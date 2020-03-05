@@ -5,28 +5,27 @@ import java.util.Objects;
 
 public class Organization {
 
-    private final String title;
+    private final Link link;
     private final String position;
     private final LocalDate startTime;
     private final LocalDate endTime;
     private final String description;
-    private final String url;
+
 
     public Organization(String title, String position, LocalDate startTime, LocalDate endTime, String description, String url) {
         Objects.requireNonNull(title, "title must not be null");
         Objects.requireNonNull(position, "position must not be null");
         Objects.requireNonNull(startTime, "startTime must not be null");
         Objects.requireNonNull(endTime, "endTime must not be null");
-        this.title = title;
+        link = new Link(title, url);
         this.position = position;
         this.startTime = startTime;
         this.endTime = endTime;
         this.description = description;
-        this.url = url;
     }
 
-    public String getTitle() {
-        return title;
+    public Link getLink() {
+        return link;
     }
 
     public String getPosition() {
@@ -45,37 +44,31 @@ public class Organization {
         return description;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
-        return title.equals(that.title) &&
+        return Objects.equals(link, that.link) &&
                 position.equals(that.position) &&
                 startTime.equals(that.startTime) &&
                 endTime.equals(that.endTime) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(url, that.url);
+                Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, position, startTime, endTime, description, url);
+        return Objects.hash(link, position, startTime, endTime, description);
     }
 
     @Override
     public String toString() {
         return "Organization{" +
-                "title='" + title + '\'' +
+                "link=" + link +
                 ", position='" + position + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", description='" + description + '\'' +
-                ", url='" + url + '\'' +
                 '}';
     }
 }
