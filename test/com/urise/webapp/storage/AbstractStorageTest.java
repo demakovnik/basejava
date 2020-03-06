@@ -18,7 +18,7 @@ public abstract class AbstractStorageTest {
     private final static Resume RESUME_2 = ResumeTestData.RESUME2;
     private final static Resume RESUME_3 = ResumeTestData.RESUME3;
     private final static Resume RESUME_4 = ResumeTestData.RESUME4;
-    private final static Resume RESUME_DUMMY = ResumeTestData.RESUMEDUMMY;;
+    private final static Resume RESUME_DUMMY = ResumeTestData.RESUMEDUMMY;
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;

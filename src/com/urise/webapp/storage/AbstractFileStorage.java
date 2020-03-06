@@ -31,7 +31,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             throw new StorageException("Error file list", null);
         }
         List<Resume> result = new ArrayList<>();
-        for (File file : directory.listFiles()) {
+        for (File file : files) {
             result.add(getResumeByPointer(file));
         }
         return result;
@@ -95,7 +95,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public int size() {
         String[] files = directory.list();
-        Objects.requireNonNull(files, "files must not be null");
+        if (files == null) {
+            throw new StorageException("fileList Error", null);
+        }
         return files.length;
     }
 
