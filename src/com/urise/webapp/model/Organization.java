@@ -8,8 +8,6 @@ public class Organization {
     private final Link link;
     private final List<Position> positionList;
 
-
-
     public Organization(String title, String url, List<Position> positionList) {
         Objects.requireNonNull(positionList, "positionList must not be null");
         link = new Link(title, url);

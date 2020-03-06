@@ -13,17 +13,12 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;
-    private final static String NAME1 = "name1";
-    private final static String NAME2 = "name2";
-    private final static String NAME3 = "name3";
-    private final static String NAME4 = "name4";
-    private final static String DUMMY = "dummy";
 
-    private final static Resume RESUME_1 = new Resume(NAME1);
-    private final static Resume RESUME_2 = new Resume(NAME2);
-    private final static Resume RESUME_3 = new Resume(NAME3);
-    private final static Resume RESUME_4 = new Resume(NAME4);
-    private final static Resume RESUME_DUMMY = new Resume(DUMMY);
+    private final static Resume RESUME_1 = ResumeTestData.RESUME1;
+    private final static Resume RESUME_2 = ResumeTestData.RESUME2;
+    private final static Resume RESUME_3 = ResumeTestData.RESUME3;
+    private final static Resume RESUME_4 = ResumeTestData.RESUME4;
+    private final static Resume RESUME_DUMMY = ResumeTestData.RESUMEDUMMY;;
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -77,7 +72,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void deleteNotExist() {
-        storage.delete(DUMMY);
+        storage.delete(RESUME_DUMMY.getUuid());
     }
 
     @Test
@@ -88,7 +83,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
-        storage.get(DUMMY);
+        storage.get(RESUME_DUMMY.getUuid());
     }
 
     @Test

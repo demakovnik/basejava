@@ -27,7 +27,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> getList() {
         File[] files = directory.listFiles();
-        Objects.requireNonNull(files, "files must not be null");
+        if (files == null) {
+            throw new StorageException("Error file list", null);
+        }
         List<Resume> result = new ArrayList<>();
         for (File file : directory.listFiles()) {
             result.add(getResumeByPointer(file));
@@ -47,7 +49,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void deleteElementByPointer(File pointer) {
         if (!pointer.delete()) {
-            throw new IllegalArgumentException("Can't delete file");
+            throw new StorageException("Can't delete file", pointer.getName());
         }
     }
 
@@ -65,10 +67,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void insertIntoStorage(Resume resume, File pointer) {
         try {
             pointer.createNewFile();
-            doWrite(resume, pointer);
         } catch (IOException e) {
-            throw new StorageException("IO Error", pointer.getName(), e);
+            throw new StorageException("Can't create file", pointer.getName(), e);
         }
+        updateByPointer(pointer, resume);
     }
 
 
@@ -77,7 +79,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doWrite(resume, pointer);
         } catch (IOException e) {
-            throw new StorageException("IO Error", pointer.getName(), e);
+            throw new StorageException("Can't write file", pointer.getName(), e);
         }
     }
 
@@ -92,9 +94,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        File[] files = directory.listFiles();
+        String[] files = directory.list();
         Objects.requireNonNull(files, "files must not be null");
-        return directory.list().length;
+        return files.length;
     }
 
     protected abstract Resume doRead(File pointer) throws IOException;

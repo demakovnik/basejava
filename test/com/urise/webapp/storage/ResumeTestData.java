@@ -11,8 +11,13 @@ import java.util.Map;
 
 public class ResumeTestData {
 
-    public static void main(String[] args) {
-        Resume resume = new Resume("Григорий Кислин");
+    public static final Resume RESUME1 = resumeInit(new Resume("Григорий Кислин"));
+    public static final Resume RESUME2 = resumeInit(new Resume("Иванов Иван"));
+    public static final Resume RESUME3 = resumeInit(new Resume("Петров Петр"));
+    public static final Resume RESUME4 = resumeInit(new Resume("Романов Роман"));
+    public static final Resume RESUMEDUMMY = resumeInit(new Resume("Dummy"));
+
+    private static Resume resumeInit(Resume resume) {
         resume.getContacts().put(ContactType.PHONENUMBER, "+7(921) 855-0482");
         resume.getContacts().put(ContactType.SKYPE, "grigory.kislin");
         resume.getContacts().put(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -268,5 +273,8 @@ public class ResumeTestData {
                 }
             }
         }
+        return resume;
     }
 }
+
+
