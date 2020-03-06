@@ -1,8 +1,10 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.*;
+import com.urise.webapp.util.DateUtil;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,49 +67,86 @@ public class ResumeTestData {
          *
          */
         List<Organization> organizations = new ArrayList<>();
-        organizations.add(new Organization("Java Online Projects", "Автор проекта",
-                LocalDate.of(2013, 10, 1), LocalDate.now(),
-                "Создание, организация и проведение Java онлайн проектов и стажировок.", "http://javaops.ru/"));
-        organizations.add(new Organization("Wrike", "Старший разработчик (backend)",
-                LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 31),
-                "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, " +
-                        "Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация " +
-                        "по OAuth1, OAuth2, JWT SSO.", "https://www.wrike.com/"));
-        organizations.add(new Organization("RIT Center", "Java архитектор",
-                LocalDate.of(2012, 4, 1), LocalDate.of(2014, 10, 31),
-                "Организация процесса разработки системы ERP для разных окружений: релизная политика, " +
-                        "версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование " +
-                        "системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка " +
-                        "интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, " +
-                        "экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера " +
-                        "документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, " +
-                        "Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting " +
-                        "via ssh tunnels, PL/Python", null));
-        organizations.add(new Organization("Luxoft (Deutsche Bank)", "Ведущий программист",
-                LocalDate.of(2010, 12, 1), LocalDate.of(2012, 4, 1),
-                "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, " +
-                        "GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения " +
-                        "для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. " +
-                        "JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5.", "http://www.luxoft.ru/"));
-        organizations.add(new Organization("Yota", "Ведущий специалист",
-                LocalDate.of(2008, 6, 1), LocalDate.of(2010, 12, 1),
-                "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, " +
-                        "v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, " +
-                        "статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)",
-                "https://www.yota.ru/"));
-        organizations.add(new Organization("Enkata", "Разработчик ПО",
-                LocalDate.of(2007, 3, 1), LocalDate.of(2008, 6, 1),
-                "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) " +
-                        "частей кластерного J2EE приложения (OLAP, Data mining).", "http://enkata.com/"));
-        organizations.add(new Organization("Siemens AG", "Разработчик ПО",
-                LocalDate.of(2005, 1, 1), LocalDate.of(2007, 2, 1),
-                "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на " +
-                        "мобильной IN платформе Siemens @vantage (Java, Unix).", "https://www.siemens.com/ru/ru/home.html"));
-        organizations.add(new Organization("Alcatel", "Инженер по аппаратному и программному тестированию",
-                LocalDate.of(1997, 9, 1), LocalDate.of(2005, 1, 1),
-                "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).",
-                "http://www.alcatel.ru/"));
-        /*********************************************************************************************************/
+
+        //Добавляем 1 организацию
+        List<Position> positionOneList = new ArrayList<>();
+        positionOneList.add(new Position("Автор проекта", DateUtil.of(2013, Month.OCTOBER),
+                LocalDate.now(), "Создание, организация и проведение Java онлайн проектов и стажировок."));
+
+        organizations.add(new Organization("Java Online Projects", "http://javaops.ru/", positionOneList));
+        //************************************************************************************************************
+
+        //Добавляем 2 организацию
+        List<Position> positionTwoList = new ArrayList<>();
+        positionTwoList.add(new Position("Старший разработчик (backend)", DateUtil.of(2014, Month.OCTOBER),
+                DateUtil.of(2016, Month.JANUARY), "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, " +
+                "Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация " +
+                "по OAuth1, OAuth2, JWT SSO."));
+
+        organizations.add(new Organization("Wrike", "https://www.wrike.com/", positionOneList));
+        //*******************************************************************************************************
+
+        //Добавляем 3 организацию
+        List<Position> positionThreeList = new ArrayList<>();
+        positionThreeList.add(new Position("Java архитектор", DateUtil.of(2012, Month.APRIL),
+                DateUtil.of(2014, Month.OCTOBER), "Организация процесса разработки системы ERP для разных окружений: релизная политика, " +
+                "версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование " +
+                "системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка " +
+                "интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, " +
+                "экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера " +
+                "документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, " +
+                "Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting " +
+                "via ssh tunnels, PL/Python"));
+
+        organizations.add(new Organization("RIT Center", null, positionThreeList));
+        //******************************************************************************************************
+
+        //Добавляем 4 организацию
+        List<Position> positionFourList = new ArrayList<>();
+        positionFourList.add(new Position("Ведущий программист", DateUtil.of(2010, Month.DECEMBER),
+                DateUtil.of(2012, Month.APRIL), "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, " +
+                "GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения " +
+                "для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. " +
+                "JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."));
+
+        organizations.add(new Organization("Luxoft (Deutsche Bank)", "http://www.luxoft.ru/", positionFourList));
+        //***************************************************************************************************
+
+        //Добавляем 5 организацию
+        List<Position> positionFiveList = new ArrayList<>();
+        positionFiveList.add(new Position("Ведущий специалист", DateUtil.of(2008, Month.JUNE),
+                DateUtil.of(2010, Month.DECEMBER), "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, " +
+                "v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, " +
+                "статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"));
+
+        organizations.add(new Organization("Yota", "https://www.yota.ru/", positionFiveList));
+        //**************************************************************************************************
+
+        //Добавляем 6 организацию
+        List<Position> positionSixList = new ArrayList<>();
+        positionSixList.add(new Position("Разработчик ПО", DateUtil.of(2007, Month.MARCH),
+                DateUtil.of(2008, Month.JUNE), "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) " +
+                "частей кластерного J2EE приложения (OLAP, Data mining)."));
+
+        organizations.add(new Organization("Enkata", "http://enkata.com//", positionSixList));
+        //**************************************************************************************************
+
+        //Добавляем 7 организацию
+        List<Position> positionSevenList = new ArrayList<>();
+        positionSevenList.add(new Position("Разработчик ПО", DateUtil.of(2005, Month.JANUARY),
+                DateUtil.of(2007, Month.FEBRUARY), "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на " +
+                "мобильной IN платформе Siemens @vantage (Java, Unix)."));
+
+        organizations.add(new Organization("Siemens AG", "https://www.siemens.com/ru/ru/home.html", positionSevenList));
+        //**************************************************************************************************
+
+        //Добавляем 8 организацию
+        List<Position> positionEightList = new ArrayList<>();
+        positionEightList.add(new Position("Инженер по аппаратному и программному тестированию", DateUtil.of(1997, Month.SEPTEMBER),
+                DateUtil.of(2005, Month.JANUARY), "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."));
+
+        organizations.add(new Organization("Alcatel", "http://www.alcatel.ru/", positionEightList));
+        //**************************************************************************************************
         /**
          * Добавляем секцию организаций в резюме
          *
@@ -118,36 +157,91 @@ public class ResumeTestData {
          * Добавляем учебные заведения
          *
          */
+
         List<Organization> educationals = new ArrayList<>();
-        educationals.add(new Organization("Coursera", "\"Functional Programming Principles in Scala\" by Martin Odersky",
-                LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 1),
-                null, "https://www.coursera.org/course/progfun"));
-        educationals.add(new Organization("Luxoft", "Курс \"Объектно-ориентированный анализ ИС. " +
-                "Концептуальное моделирование на UML.\"", LocalDate.of(2011, 3, 1),
-                LocalDate.of(2011, 4, 1), null, "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"));
-        educationals.add(new Organization("Siemens AG", "3 месяца обучения мобильным IN сетям (Берлин)",
-                LocalDate.of(2005, 1, 1), LocalDate.of(2005, 4, 1), null,
-                "http://www.siemens.ru/"));
-        educationals.add(new Organization("Alcatel", "6 месяцев обучения цифровым телефонным сетям (Москва)",
-                LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 1), null,
-                "http://www.alcatel.ru/"));
+
+        //Добавляем 1 учебное заведение
+        List<Position> positionOneListEducation = new ArrayList<>();
+        positionOneListEducation.add(new Position("\"Functional Programming Principles in Scala\" by Martin Odersky",
+                DateUtil.of(2013, Month.MARCH),
+                DateUtil.of(2013, Month.MAY), null));
+
+        educationals.add(new Organization("Coursera", "https://www.coursera.org/course/progfun", positionOneListEducation));
+        //**************************************************************************************************
+
+        //Добавляем 2 учебное заведение
+        List<Position> positionTwoListEducation = new ArrayList<>();
+        positionTwoListEducation.add(new Position("\"Объектно-ориентированный анализ ИС. " +
+                "Концептуальное моделирование на UML.\"",
+                DateUtil.of(2011, Month.MARCH),
+                DateUtil.of(2011, Month.APRIL), null));
+
+        educationals.add(new Organization("Coursera", "https://www.coursera.org/course/progfun", positionTwoListEducation));
+        //**************************************************************************************************
+
+        //Добавляем 3 учебное заведение
+        List<Position> positionThreeListEducation = new ArrayList<>();
+        positionThreeListEducation.add(new Position("\"Объектно-ориентированный анализ ИС. " +
+                "Концептуальное моделирование на UML.\"",
+                DateUtil.of(2011, Month.MARCH),
+                DateUtil.of(2011, Month.APRIL), null));
+
+        educationals.add(new Organization("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366",
+                positionThreeListEducation));
+        //**************************************************************************************************
+
+        //Добавляем 4 учебное заведение
+        List<Position> positionFourListEducation = new ArrayList<>();
+        positionFourListEducation.add(new Position("3 месяца обучения мобильным IN сетям (Берлин)",
+                DateUtil.of(2005, Month.JANUARY),
+                DateUtil.of(2005, Month.APRIL), null));
+
+        educationals.add(new Organization("Siemens AG", "http://www.siemens.ru/",
+                positionFourListEducation));
+        //**************************************************************************************************
+
+        //Добавляем 5 учебное заведение
+        List<Position> positionFiveListEducation = new ArrayList<>();
+        positionFiveListEducation.add(new Position("6 месяцев обучения цифровым телефонным сетям (Москва)",
+                DateUtil.of(1997, Month.SEPTEMBER),
+                DateUtil.of(1998, Month.MARCH), null));
+
+        educationals.add(new Organization("Alcatel", "http://www.alcatel.ru/",
+                positionFiveListEducation));
+        //**************************************************************************************************
+
+        //Добавляем 6 учебное заведение
+        List<Position> positionSixListEducation = new ArrayList<>();
+        positionSixListEducation.add(new Position("Аспирантура (программист С, С++)",
+                DateUtil.of(1993, Month.SEPTEMBER),
+                DateUtil.of(1996, Month.JULY), null));
+        positionSixListEducation.add(new Position("Инженер (программист Fortran, C)",
+                DateUtil.of(1987, Month.SEPTEMBER),
+                DateUtil.of(1993, Month.JULY), null));
+
         educationals.add(new Organization("Санкт-Петербургский национальный исследовательский университет " +
-                "информационных технологий, механики и оптики", "Аспирантура (программист С, С++)",
-                LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), null,
-                "http://www.ifmo.ru/"));
-        educationals.add(new Organization("Санкт-Петербургский национальный исследовательский университет " +
-                "информационных технологий, механики и оптики", "Инженер (программист Fortran, C)",
-                LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1),
-                null, "http://www.ifmo.ru/"));
-        educationals.add(new Organization("Заочная физико-техническая школа при МФТИ", "Закончил с отличием",
-                LocalDate.of(1984, 9, 1), LocalDate.of(1987, 6, 1), null,
-                "http://www.school.mipt.ru/"));
+                "информационных технологий, механики и оптики", "http://www.ifmo.ru/",
+                positionSixListEducation));
+        //**************************************************************************************************
+
+        //Добавляем 7 учебное заведение
+        List<Position> positionSevenListEducation = new ArrayList<>();
+        positionSevenListEducation.add(new Position("Закончил с отличием",
+                DateUtil.of(1984, Month.SEPTEMBER),
+                DateUtil.of(1987, Month.JUNE), null));
+
+        educationals.add(new Organization("Заочная физико-техническая школа при МФТИ", "http://www.school.mipt.ru/",
+                positionSevenListEducation));
+        //**************************************************************************************************
+
+
         /**********************************************************************************************************/
         /**
          * Добавляем секцию учебных заведений в резюме
          *
          */
         resume.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
+
         resume.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
         resume.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
         System.out.println(resume.getFullName());
