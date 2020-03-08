@@ -9,7 +9,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void deleteElementByPointerFromArrayStorage(Integer pointer) {
-        int index = (Integer) pointer;
+        int index = pointer;
         int shiftIndex = size - index - 1;
         if (shiftIndex > 0) {
             System.arraycopy(storage, index + 1, storage, index, shiftIndex);
@@ -18,7 +18,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void insertIntoArrayStorage(Resume resume, Integer pointer) {
-        int index = -((Integer) pointer) - 1;
+        int index = -pointer - 1;
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = resume;
     }

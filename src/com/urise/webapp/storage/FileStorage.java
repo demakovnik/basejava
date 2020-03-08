@@ -63,7 +63,7 @@ public class FileStorage extends AbstractStorage<File>  {
 
     @Override
     protected File getPointerToResume(String uuid) {
-        return new File(directory, uuid + ".txt");
+        return new File(directory, uuid);
     }
 
     @Override
