@@ -7,21 +7,21 @@ import java.util.Objects;
 public class MainFile {
 
     public static void main(String[] args) {
-        printListOfFiles(new File("."));
+        printListOfFiles(new File("."), "");
     }
 
-    private static void printListOfFiles(File file) {
+    private static void printListOfFiles(File file, String shift) {
+
         File[] listFiles = file.listFiles();
         Objects.requireNonNull(listFiles, "listFiles must not be null");
         for (File f : listFiles) {
-            if (f.isDirectory()) {
-                System.out.println(f.getName());
-                printListOfFiles(f);
-
-            } else System.out.println(f.getName());
+            if (!f.isDirectory()) {
+                System.out.println(shift + f.getName());
+            } else {
+                System.out.println(shift  + f.getName());
+                printListOfFiles(f, shift +" ");
+            }
         }
-
-
     }
 }
 

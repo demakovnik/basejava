@@ -4,6 +4,8 @@ import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -60,10 +62,18 @@ public abstract class AbstractStorage<SK> implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        return getList().stream().sorted(COMPARATOR).collect(Collectors.toList());
+        List<Resume> list = new ArrayList<>();
+
+        try {
+
+            list =  getList().stream().sorted(COMPARATOR).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
-    protected abstract List<Resume> getList();
+    protected abstract List<Resume> getList() throws IOException;
 
     protected abstract Resume getResumeByPointer(SK pointer);
 

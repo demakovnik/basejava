@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class ExperienceOrEducationSection extends AbstractSection {
 
+    //private static final long serializationUID = 1L;
+
     private final List<Organization> listOfExperienceOrEducation;
 
     public ExperienceOrEducationSection(List<Organization> listOfExperienceOrEducation) {

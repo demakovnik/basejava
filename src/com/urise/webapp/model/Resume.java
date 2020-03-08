@@ -1,11 +1,14 @@
 package com.urise.webapp.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
-public class Resume {
+public class Resume implements Serializable {
+
+    //private static final long serializationUID = 1L;
 
     // Unique identifier
     private final String uuid;

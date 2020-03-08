@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class PersonalOrObjectiveSection extends AbstractSection {
 
+    //private static final long serializationUID = 1L;
     private final String text;
 
     public PersonalOrObjectiveSection(String text) {
