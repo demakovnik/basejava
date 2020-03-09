@@ -5,6 +5,8 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Array based storage for Resumes

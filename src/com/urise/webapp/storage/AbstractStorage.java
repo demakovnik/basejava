@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractStorage<SK> implements Storage {
 
@@ -86,4 +87,6 @@ public abstract class AbstractStorage<SK> implements Storage {
     protected abstract void insertIntoStorage(Resume resume, SK pointer);
 
     protected abstract void updateByPointer(SK pointer, Resume resume);
+
+
 }

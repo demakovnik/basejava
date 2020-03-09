@@ -1,12 +1,15 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
+import com.urise.webapp.fileoperator.FileStorageStrategy;
 import com.urise.webapp.model.Resume;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileStorage extends AbstractStorage<File>  {
 
@@ -15,29 +18,17 @@ public class FileStorage extends AbstractStorage<File>  {
     private FileStorageStrategy strategy;
 
     protected FileStorage(String dir, FileStorageStrategy strategy) {
-        directory = new File(dir);
-        this.strategy = strategy;
+        File localFile = new File(dir);
+        if (!localFile.isDirectory()) {
+            throw new IllegalArgumentException(localFile.getAbsolutePath() + " is not directory");
+        }
+        if (!localFile.canRead() || !localFile.canWrite()) {
+            throw new IllegalArgumentException(localFile.getAbsolutePath() + " is not readable/writable");
+        }
+        directory = localFile;
         Objects.requireNonNull(directory,"directory must not be null");
+        this.strategy = strategy;
         Objects.requireNonNull(strategy, "strategy must not be null");
-        if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
-        }
-        if (!directory.canRead() || !directory.canWrite()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
-        }
-    }
-
-    @Override
-    protected List<Resume> getList() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Error file list", null);
-        }
-        List<Resume> result = new ArrayList<>();
-        for (File file : files) {
-            result.add(getResumeByPointer(file));
-        }
-        return result;
     }
 
     @Override
@@ -88,20 +79,20 @@ public class FileStorage extends AbstractStorage<File>  {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        Objects.requireNonNull(files, "files must not be null");
-        for (File file : files) {
-            deleteElementByPointer(file);
-        }
+        getStreamItems().forEach(this::deleteElementByPointer);
     }
 
     @Override
     public int size() {
-        String[] files = directory.list();
-        if (files == null) {
-            throw new StorageException("fileList Error", null);
-        }
-        return files.length;
+        return (int) getStreamItems().count();
     }
 
+    @Override
+    protected List<Resume> getList() {
+        return getStreamItems().map(this::getResumeByPointer).collect(Collectors.toList());
+    }
+
+    protected Stream<File> getStreamItems() {
+        return Arrays.stream(directory.listFiles());
+    }
 }

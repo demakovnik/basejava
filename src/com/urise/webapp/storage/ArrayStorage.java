@@ -2,6 +2,8 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
+import java.util.stream.Stream;
+
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
@@ -23,5 +25,6 @@ public class ArrayStorage extends AbstractArrayStorage {
     protected void insertIntoArrayStorage(Resume resume, Integer pointer) {
         storage[size] = resume;
     }
+
 }
 
