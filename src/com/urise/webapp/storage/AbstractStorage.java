@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.io.IOException;
@@ -62,15 +63,12 @@ public abstract class AbstractStorage<SK> implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("GetAllSorted");
-        List<Resume> list = new ArrayList<>();
-
         try {
 
-            list =  getList().stream().sorted(COMPARATOR).collect(Collectors.toList());
+            return getList().stream().sorted(COMPARATOR).collect(Collectors.toList());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException("IO Error", null, e);
         }
-        return list;
     }
 
     protected abstract List<Resume> getList() throws IOException;
