@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class PathStorage extends AbstractStorage<Path> {
@@ -26,15 +27,6 @@ public class PathStorage extends AbstractStorage<Path> {
         if (!Files.isDirectory(directory) || !Files.isWritable(directory) || !Files.isReadable(directory)) {
             throw new IllegalArgumentException(dir +
                     " is not directory or is not readable/writable");
-        }
-    }
-
-    @Override
-    protected List<Resume> getList() {
-        try {
-            return Files.list(directory).map(directory -> getResumeByPointer(directory)).collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new StorageException("IO Error", null, e);
         }
     }
 
@@ -89,19 +81,24 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::deleteElementByPointer);
-        } catch (IOException e) {
-            throw new StorageException("Path clear error", null, e);
-        }
+            getStreamItems().forEach(this::deleteElementByPointer);
     }
 
     @Override
     public int size() {
+        return (int) getStreamItems().count();
+    }
+
+    @Override
+    protected List<Resume> getList() {
+        return getStreamItems().map(directory -> getResumeByPointer(directory)).collect(Collectors.toList());
+    }
+
+    private Stream<Path> getStreamItems() {
         try {
-            return (int) Files.list(directory).count();
+            return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("IO error", null, e);
+            throw new StorageException("IO Error", null, e);
         }
     }
 
