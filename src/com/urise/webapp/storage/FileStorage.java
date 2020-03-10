@@ -16,16 +16,16 @@ public class FileStorage extends AbstractStorage<File>  {
     private FileStorageStrategy strategy;
 
     protected FileStorage(String dir, FileStorageStrategy strategy) {
-        directory = new File(dir);
+        Objects.requireNonNull(strategy,"strategy must not be null");
         this.strategy = strategy;
-        Objects.requireNonNull(directory,"directory must not be null");
-        Objects.requireNonNull(strategy, "strategy must not be null");
-        if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
+        File localFile = new File(dir);
+        if (!localFile.isDirectory()) {
+            throw new IllegalArgumentException(localFile.getAbsolutePath() + " is not directory");
         }
-        if (!directory.canRead() || !directory.canWrite()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
+        if (!localFile.canRead() || !localFile.canWrite()) {
+            throw new IllegalArgumentException(localFile.getAbsolutePath() + " is not readable/writable");
         }
+        directory = localFile;
     }
 
     @Override
