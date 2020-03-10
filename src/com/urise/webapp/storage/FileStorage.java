@@ -76,8 +76,7 @@ public class FileStorage extends AbstractStorage<File>  {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        Objects.requireNonNull(files, "files must not be null");
+        File[] files = getFileList();
         for (File file : files) {
             deleteElementByPointer(file);
         }
