@@ -15,29 +15,16 @@ public class FileStorage extends AbstractStorage<File>  {
     private FileStorageStrategy strategy;
 
     protected FileStorage(String dir, FileStorageStrategy strategy) {
-        directory = new File(dir);
+        Objects.requireNonNull(strategy,"strategy must not be null");
         this.strategy = strategy;
-        Objects.requireNonNull(directory,"directory must not be null");
-        Objects.requireNonNull(strategy, "strategy must not be null");
-        if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
+        File localFile = new File(dir);
+        if (!localFile.isDirectory()) {
+            throw new IllegalArgumentException(localFile.getAbsolutePath() + " is not directory");
         }
-        if (!directory.canRead() || !directory.canWrite()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
+        if (!localFile.canRead() || !localFile.canWrite()) {
+            throw new IllegalArgumentException(localFile.getAbsolutePath() + " is not readable/writable");
         }
-    }
-
-    @Override
-    protected List<Resume> getList() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Error file list", null);
-        }
-        List<Resume> result = new ArrayList<>();
-        for (File file : files) {
-            result.add(getResumeByPointer(file));
-        }
-        return result;
+        directory = localFile;
     }
 
     @Override
@@ -88,8 +75,7 @@ public class FileStorage extends AbstractStorage<File>  {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        Objects.requireNonNull(files, "files must not be null");
+        File[] files = getFileList();
         for (File file : files) {
             deleteElementByPointer(file);
         }
@@ -97,11 +83,25 @@ public class FileStorage extends AbstractStorage<File>  {
 
     @Override
     public int size() {
-        String[] files = directory.list();
-        if (files == null) {
-            throw new StorageException("fileList Error", null);
-        }
+        File[] files = getFileList();
         return files.length;
     }
 
+    @Override
+    protected List<Resume> getList() {
+        File[] files = getFileList();
+        List<Resume> result = new ArrayList<>();
+        for (File file : files) {
+            result.add(getResumeByPointer(file));
+        }
+        return result;
+    }
+
+    File[] getFileList() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Error file list", null);
+        }
+        return files;
+    }
 }
