@@ -91,7 +91,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getList() {
-        return getStreamItems().map(directory -> getResumeByPointer(directory)).collect(Collectors.toList());
+        return getStreamItems().map(this::getResumeByPointer).collect(Collectors.toList());
     }
 
     private Stream<Path> getStreamItems() {
