@@ -56,7 +56,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path getPointerToResume(String uuid) {
-        return Paths.get(directory.toString() + "/" + uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
