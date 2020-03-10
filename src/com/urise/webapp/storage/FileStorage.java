@@ -84,8 +84,7 @@ public class FileStorage extends AbstractStorage<File>  {
 
     @Override
     public int size() {
-        File[] files = getFileList();
-        return files.length;
+        return getFileList().length;
     }
 
     @Override
