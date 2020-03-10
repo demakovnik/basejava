@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FileStorage extends AbstractStorage<File>  {
+public class FileStorage extends AbstractStorage<File> {
 
     private File directory;
 
     private FileStorageStrategy strategy;
 
     protected FileStorage(String dir, FileStorageStrategy strategy) {
-        Objects.requireNonNull(strategy,"strategy must not be null");
+        Objects.requireNonNull(strategy, "strategy must not be null");
         this.strategy = strategy;
         File localFile = new File(dir);
         if (!localFile.isDirectory()) {

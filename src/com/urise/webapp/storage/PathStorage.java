@@ -81,7 +81,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-            getStreamItems().forEach(this::deleteElementByPointer);
+        getStreamItems().forEach(this::deleteElementByPointer);
     }
 
     @Override
