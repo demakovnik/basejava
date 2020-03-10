@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class PathStorage extends AbstractStorage<Path> {
@@ -19,14 +18,23 @@ public class PathStorage extends AbstractStorage<Path> {
     private FileStorageStrategy strategy;
 
     public PathStorage(String dir, FileStorageStrategy strategy) {
-        Objects.requireNonNull(strategy, "strategy must not be null");
+        directory = Paths.get(dir);
         this.strategy = strategy;
-        Path localpath = Paths.get(dir);
-        if (!Files.isDirectory(localpath) || !Files.isWritable(localpath) || !Files.isReadable(localpath)) {
+        Objects.requireNonNull(directory, "directory must not be null");
+        Objects.requireNonNull(strategy, "strategy must not be null");
+        if (!Files.isDirectory(directory) || !Files.isWritable(directory) || !Files.isReadable(directory)) {
             throw new IllegalArgumentException(dir +
                     " is not directory or is not readable/writable");
         }
-        directory = localpath;
+    }
+
+    @Override
+    protected List<Resume> getList() {
+        try {
+            return Files.list(directory).map(directory -> getResumeByPointer(directory)).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new StorageException("IO Error", null, e);
+        }
     }
 
     @Override
@@ -80,25 +88,21 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        getStreamItems().forEach(this::deleteElementByPointer);
+        try {
+            Files.list(directory).forEach(this::deleteElementByPointer);
+        } catch (IOException e) {
+            throw new StorageException("Path clear error", null, e);
+        }
     }
 
     @Override
     public int size() {
-        return (int) getStreamItems().count();
-
-    }
-
-    @Override
-    protected List<Resume> getList() {
-        return getStreamItems().map(directory -> getResumeByPointer(directory)).collect(Collectors.toList());
-    }
-
-    private Stream<Path> getStreamItems() {
         try {
-            return Files.list(directory);
+            return (int) Files.list(directory).count();
         } catch (IOException e) {
             throw new StorageException("IO error", null, e);
         }
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.urise.webapp;
 
+import com.urise.webapp.fileoperator.ObjectToByteStreamOperator;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.*;
 
