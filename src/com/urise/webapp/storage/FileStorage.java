@@ -29,19 +29,6 @@ public class FileStorage extends AbstractStorage<File>  {
     }
 
     @Override
-    protected List<Resume> getList() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Error file list", null);
-        }
-        List<Resume> result = new ArrayList<>();
-        for (File file : files) {
-            result.add(getResumeByPointer(file));
-        }
-        return result;
-    }
-
-    @Override
     protected Resume getResumeByPointer(File pointer) {
         try {
             return strategy.doRead(new BufferedInputStream(new FileInputStream(pointer)));
@@ -98,11 +85,25 @@ public class FileStorage extends AbstractStorage<File>  {
 
     @Override
     public int size() {
-        String[] files = directory.list();
-        if (files == null) {
-            throw new StorageException("fileList Error", null);
-        }
+        File[] files = getFileList();
         return files.length;
     }
 
+    @Override
+    protected List<Resume> getList() {
+        File[] files = getFileList();
+        List<Resume> result = new ArrayList<>();
+        for (File file : files) {
+            result.add(getResumeByPointer(file));
+        }
+        return result;
+    }
+
+    File[] getFileList() {
+        File[] files = directory.listFiles();
+        if (files != null) {
+            return files;
+        }
+        throw new StorageException("Error file list", null);
+    }
 }
