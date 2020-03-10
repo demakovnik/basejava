@@ -20,14 +20,14 @@ public class PathStorage extends AbstractStorage<Path> {
     private FileStorageStrategy strategy;
 
     public PathStorage(String dir, FileStorageStrategy strategy) {
-        directory = Paths.get(dir);
-        this.strategy = strategy;
-        Objects.requireNonNull(directory, "directory must not be null");
         Objects.requireNonNull(strategy, "strategy must not be null");
-        if (!Files.isDirectory(directory) || !Files.isWritable(directory) || !Files.isReadable(directory)) {
+        this.strategy = strategy;
+        Path localpath = Paths.get(dir);
+        if (!Files.isDirectory(localpath) || !Files.isWritable(localpath) || !Files.isReadable(localpath)) {
             throw new IllegalArgumentException(dir +
                     " is not directory or is not readable/writable");
         }
+        directory = localpath;
     }
 
     @Override
@@ -101,6 +101,4 @@ public class PathStorage extends AbstractStorage<Path> {
             throw new StorageException("IO Error", null, e);
         }
     }
-
-
 }
