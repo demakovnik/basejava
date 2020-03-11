@@ -7,7 +7,10 @@ public class ExperienceOrEducationSection extends AbstractSection {
 
     //private static final long serializationUID = 1L;
 
-    private final List<Organization> listOfExperienceOrEducation;
+    private List<Organization> listOfExperienceOrEducation;
+
+    public ExperienceOrEducationSection() {
+    }
 
     public ExperienceOrEducationSection(List<Organization> listOfExperienceOrEducation) {
         Objects.requireNonNull(listOfExperienceOrEducation, "listOfExperienceOrEducation must not be null");

@@ -7,7 +7,10 @@ public class AchievementOrQualificationsSection extends AbstractSection {
 
     //private static final long serializationUID = 1L;
 
-    private final List<String> listOfAchievementsOrQualifications;
+    private List<String> listOfAchievementsOrQualifications;
+
+    public AchievementOrQualificationsSection() {
+    }
 
     public AchievementOrQualificationsSection(List<String> listOfAchievementsOrQualifications) {
         Objects.requireNonNull(listOfAchievementsOrQualifications, "listOfAchievementsOrQualifications must not be null");

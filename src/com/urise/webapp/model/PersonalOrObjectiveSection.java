@@ -5,7 +5,10 @@ import java.util.Objects;
 public class PersonalOrObjectiveSection extends AbstractSection {
 
     //private static final long serializationUID = 1L;
-    private final String text;
+    private String text;
+
+    public PersonalOrObjectiveSection() {
+    }
 
     public PersonalOrObjectiveSection(String text) {
         Objects.requireNonNull(text, "text must not be null");

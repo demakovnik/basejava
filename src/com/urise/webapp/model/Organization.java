@@ -1,13 +1,19 @@
 package com.urise.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
 
-    private final Link link;
-    private final List<Position> positionList;
+    private Link link;
+    private List<Position> positionList;
+
+    public Organization() {
+    }
 
     public Organization(String title, String url, List<Position> positionList) {
         Objects.requireNonNull(positionList, "positionList must not be null");

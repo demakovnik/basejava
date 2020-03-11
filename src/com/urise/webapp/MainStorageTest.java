@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
  * (just run, no need to understand)
  */
 public class MainStorageTest {
-    private final static Storage STORAGE = new PathStorage("storage",new ObjectToByteStreamOperator());
+    private final static Storage STORAGE = new ListStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
