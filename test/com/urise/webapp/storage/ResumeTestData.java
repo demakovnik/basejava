@@ -90,7 +90,7 @@ public class ResumeTestData {
                 "Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация " +
                 "по OAuth1, OAuth2, JWT SSO."));
 
-        organizations.add(new Organization("Wrike", "https://www.wrike.com/", positionOneList));
+        organizations.add(new Organization("Wrike", "https://www.wrike.com/", positionTwoList));
         //*******************************************************************************************************
 
         //Добавляем 3 организацию

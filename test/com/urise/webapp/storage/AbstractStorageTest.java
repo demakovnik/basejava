@@ -2,7 +2,9 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.model.AchievementOrQualificationsSection;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.SectionType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,22 +31,16 @@ public abstract class AbstractStorageTest {
     @Before
     public void setUp() {
         storage.clear();
-        storage.save(RESUME_3);
-        storage.save(RESUME_2);
         storage.save(RESUME_1);
+        storage.save(RESUME_2);
+        storage.save(RESUME_3);
+
     }
 
     @Test
     public void clear() {
         storage.clear();
         assertEquals(0, storage.size());
-    }
-
-    @Test
-    public void update() {
-        Resume updateResume = new Resume(RESUME_2.getUuid(), "UpdateName");
-        storage.update(updateResume);
-        Assert.assertEquals(updateResume, storage.get(RESUME_2.getUuid()));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -54,9 +50,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        storage.save(RESUME_4);
+        Resume expectedResume = RESUME_4;
+        storage.save(expectedResume);
         Assert.assertEquals(4, storage.size());
-        Assert.assertEquals(RESUME_4, storage.get(RESUME_4.getUuid()));
+        Resume actualResume = storage.get(RESUME_4.getUuid());
+        Assert.assertEquals(RESUME_4, actualResume);
     }
 
     @Test(expected = ExistStorageException.class)
@@ -79,8 +77,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void get() {
-        Resume result = storage.get(RESUME_2.getUuid());
-        Assert.assertEquals(RESUME_2, result);
+        Resume result = storage.get(RESUME_1.getUuid());
+        Assert.assertEquals(RESUME_1, result);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -100,5 +98,13 @@ public abstract class AbstractStorageTest {
     @Test
     public void size() {
         Assert.assertEquals(3, storage.size());
+    }
+
+    @Test
+    public void update() {
+        Resume updateResume = new Resume(RESUME_1.getUuid(), "UpdateName");
+        storage.update(updateResume);
+        Resume actualResume = storage.get(RESUME_1.getUuid());
+        Assert.assertEquals(updateResume, actualResume);
     }
 }

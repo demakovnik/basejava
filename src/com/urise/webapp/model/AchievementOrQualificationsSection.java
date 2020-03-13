@@ -33,5 +33,12 @@ public class AchievementOrQualificationsSection extends AbstractSection {
     public int hashCode() {
         return Objects.hash(listOfAchievementsOrQualifications);
     }
+
+    @Override
+    public String toString() {
+        return "AchievementOrQualificationsSection{" +
+                "listOfAchievementsOrQualifications=" + listOfAchievementsOrQualifications +
+                '}';
+    }
 }
 

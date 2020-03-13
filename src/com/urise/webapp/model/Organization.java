@@ -21,6 +21,12 @@ public class Organization implements Serializable {
         this.positionList = positionList;
     }
 
+    public Organization(Link link, List<Position> positionList) {
+        Objects.requireNonNull(positionList, "positionList must not be null");
+        this.link = link;
+        this.positionList = positionList;
+    }
+
     public Link getLink() {
         return link;
     }

@@ -33,4 +33,11 @@ public class ExperienceOrEducationSection extends AbstractSection {
     public int hashCode() {
         return Objects.hash(listOfExperienceOrEducation);
     }
+
+    @Override
+    public String toString() {
+        return "ExperienceOrEducationSection{" +
+                "listOfExperienceOrEducation=" + listOfExperienceOrEducation +
+                '}';
+    }
 }

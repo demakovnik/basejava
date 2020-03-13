@@ -1,6 +1,6 @@
 package com.urise.webapp;
 
-import com.urise.webapp.fileoperator.ObjectToByteStreamOperator;
+import com.urise.webapp.fileoperator.ObjectToDataStreamOperator;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.*;
 
@@ -13,7 +13,8 @@ import java.io.InputStreamReader;
  * (just run, no need to understand)
  */
 public class MainStorageTest {
-    private final static Storage STORAGE = new ListStorage();
+    private final static String DIR = "storage";
+    private final static Storage STORAGE = new PathStorage(DIR, new ObjectToDataStreamOperator());
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

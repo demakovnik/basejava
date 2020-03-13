@@ -16,7 +16,14 @@ public class Link implements Serializable {
     public Link(String title, String url) {
         Objects.requireNonNull(title, "title must not be null");
         this.title = title;
+        if (url == null) {
+            this.url = "null";
+        }
         this.url = url;
+    }
+
+    public Link(String title) {
+        this(title,"null");
     }
 
     public String getTitle() {

@@ -19,8 +19,8 @@ public class Resume implements Serializable {
     // Unique identifier
     private String uuid;
     private String fullName;
-    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume() {
 
@@ -53,11 +53,6 @@ public class Resume implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return uuid + ": " + fullName;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -71,5 +66,23 @@ public class Resume implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(uuid, fullName, contacts, sections);
+    }
+
+    @Override
+    public String toString() {
+        return "Resume{" +
+                "uuid='" + uuid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", contacts=" + contacts +
+                ", sections=" + sections +
+                '}';
+    }
+
+    public void setContacts(Map<ContactType, String> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void setSections(Map<SectionType, AbstractSection> sections) {
+        this.sections = sections;
     }
 }

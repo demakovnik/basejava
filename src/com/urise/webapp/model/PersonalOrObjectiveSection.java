@@ -31,4 +31,11 @@ public class PersonalOrObjectiveSection extends AbstractSection {
     public int hashCode() {
         return Objects.hash(text);
     }
+
+    @Override
+    public String toString() {
+        return "PersonalOrObjectiveSection{" +
+                "text='" + text + '\'' +
+                '}';
+    }
 }
