@@ -166,27 +166,30 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     private AbstractSection readSection(DataInputStream dis) throws IOException {
         List<String> stringList = new ArrayList<>();
         List<Organization> organizationList = new ArrayList<>();
+        AbstractSection result = null;
         SectionType st = SectionType.valueOf(dis.readUTF());
         switch (st) {
             case PERSONAL:
             case OBJECTIVE:
-                return new PersonalOrObjectiveSection(dis.readUTF());
+                result =  new PersonalOrObjectiveSection(dis.readUTF());
+                break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 int numberOfStrings = dis.readInt();
                 for (int i = 0; i < numberOfStrings; i++) {
                     stringList.add(dis.readUTF());
                 }
-                return new AchievementOrQualificationsSection(new ArrayList<>(stringList));
+                result =  new AchievementOrQualificationsSection(stringList);
+                break;
             case EXPERIENCE:
             case EDUCATION:
                 int numberOfOrgs = dis.readInt();
                 for (int i = 0; i < numberOfOrgs; i++) {
                     organizationList.add(readOrganization(dis));
                 }
-                return new ExperienceOrEducationSection(new ArrayList<>(organizationList));
-            default:
-                throw new IllegalArgumentException("Error");
+                result = new ExperienceOrEducationSection(organizationList);
+                break;
         }
+        return result;
     }
 }
