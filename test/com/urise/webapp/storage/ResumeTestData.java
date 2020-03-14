@@ -8,6 +8,8 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.urise.webapp.util.DateUtil.NOW;
+
 public class ResumeTestData {
 
     public static final Resume RESUME1 = new Resume("Григорий Кислин");
@@ -78,7 +80,7 @@ public class ResumeTestData {
         //Добавляем 1 организацию
         List<Position> positionOneList = new ArrayList<>();
         positionOneList.add(new Position("Автор проекта", DateUtil.of(2013, Month.OCTOBER),
-                LocalDate.now(), "Создание, организация и проведение Java онлайн проектов и стажировок."));
+                NOW, "Создание, организация и проведение Java онлайн проектов и стажировок."));
 
         organizations.add(new Organization("Java Online Projects", "http://javaops.ru/", positionOneList));
         //************************************************************************************************************
@@ -278,7 +280,7 @@ public class ResumeTestData {
         //Добавляем 1 организацию
         List<Position> positionOneList = new ArrayList<>();
         positionOneList.add(new Position("Директор", DateUtil.of(2018, Month.JANUARY),
-                LocalDate.now(), "Делал все что угодно"));
+                NOW, "Делал все что угодно"));
 
         organizations.add(new Organization("Рога и копыта", "http://roga.ru/", positionOneList));
         //************************************************************************************************************
@@ -340,7 +342,7 @@ public class ResumeTestData {
         //Добавляем 1 организацию
         List<Position> positionOneList = new ArrayList<>();
         positionOneList.add(new Position("Заместитель директора", DateUtil.of(2018, Month.JANUARY),
-                LocalDate.now(), "Делал все подряд"));
+                NOW, "Делал все подряд"));
 
         organizations.add(new Organization("Рога и копыта", "http://roga.ru/", positionOneList));
         //************************************************************************************************************
@@ -418,7 +420,7 @@ public class ResumeTestData {
         //Добавляем 1 организацию
         List<Position> positionOneList = new ArrayList<>();
         positionOneList.add(new Position("Автор проекта", DateUtil.of(2013, Month.OCTOBER),
-                LocalDate.now(), "Создание, организация и проведение Java онлайн проектов и стажировок."));
+                NOW, "Создание, организация и проведение Java онлайн проектов и стажировок."));
 
         organizations.add(new Organization("Java Online Projects", "http://javaops.ru/", positionOneList));
         //************************************************************************************************************
