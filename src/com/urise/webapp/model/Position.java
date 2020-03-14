@@ -29,7 +29,7 @@ public class Position implements Serializable {
         this.title = position;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.description = (description == null) ? "null" : description;
+        this.description = description;
     }
 
     public String getTitle() {

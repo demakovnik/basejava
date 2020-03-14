@@ -60,12 +60,15 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         writeLocalDate(position.getStartTime(), dos);
         writeLocalDate(position.getEndTime(), dos);
         String description = position.getDescription();
+        description = description == null ? "null" : description;
         dos.writeUTF(description);
     }
 
     private void writeLink(Link link, DataOutputStream dos) throws IOException {
         dos.writeUTF(link.getTitle());
-        dos.writeUTF(link.getUrl());
+        String url = link.getUrl();
+        url = url == null ? "null" : url;
+        dos.writeUTF(url);
     }
 
     private void writeOrganization(Organization org, DataOutputStream dos) throws IOException {
@@ -131,6 +134,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     private Link readLink(DataInputStream dis) throws IOException {
         String title = dis.readUTF();
         String url = dis.readUTF();
+        url = url.equals("null") ? null : url;
         return new Link(title, url);
     }
 
@@ -145,6 +149,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         LocalDate startTime = readLocalDate(dis);
         LocalDate endTime = readLocalDate(dis);
         String description = dis.readUTF();
+        description = description.equals("null") ? null : description;
         return new Position(title, startTime, endTime, description);
     }
 
