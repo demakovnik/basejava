@@ -83,12 +83,13 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     private void writeSection(SectionType sectionType, AbstractSection section,
                               DataOutputStream dos) throws IOException {
         dos.writeUTF(sectionType.name());
+
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
-
                 dos.writeUTF(((PersonalOrObjectiveSection) section).getText());
                 break;
+
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 List<String> stringList = ((AchievementOrQualificationsSection) section)
@@ -98,6 +99,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                     dos.writeUTF(s);
                 }
                 break;
+
             case EDUCATION:
             case EXPERIENCE:
                 List<Organization> listOfExperienceOrEducation = ((ExperienceOrEducationSection) section)
@@ -112,6 +114,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
     private void writeContacts(Map<ContactType, String> contacts, DataOutputStream dos) throws IOException {
         dos.writeInt(contacts.size());
+
         for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
             dos.writeUTF(entry.getKey().name());
             dos.writeUTF(entry.getValue());
@@ -153,6 +156,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     private Organization readOrganization(DataInputStream dis) throws IOException {
         Link link = readLink(dis);
         List<Position> positionList = new ArrayList<>();
+
         int numberOfPositions = dis.readInt();
         for (int i = 0; i < numberOfPositions; i++) {
             positionList.add(readPosition(dis));
@@ -161,25 +165,28 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     }
 
     private AbstractSection readSection(DataInputStream dis) throws IOException {
-        List<String> stringList = new ArrayList<>();
-        List<Organization> organizationList = new ArrayList<>();
         AbstractSection result = null;
         SectionType st = SectionType.valueOf(dis.readUTF());
+
         switch (st) {
             case PERSONAL:
             case OBJECTIVE:
                 result = new PersonalOrObjectiveSection(dis.readUTF());
                 break;
+
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 int numberOfStrings = dis.readInt();
+                List<String> stringList = new ArrayList<>();
                 for (int i = 0; i < numberOfStrings; i++) {
                     stringList.add(dis.readUTF());
                 }
                 result = new AchievementOrQualificationsSection(stringList);
                 break;
+
             case EXPERIENCE:
             case EDUCATION:
+                List<Organization> organizationList = new ArrayList<>();
                 int numberOfOrgs = dis.readInt();
                 for (int i = 0; i < numberOfOrgs; i++) {
                     organizationList.add(readOrganization(dis));
