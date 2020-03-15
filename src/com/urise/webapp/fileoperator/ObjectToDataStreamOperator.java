@@ -131,7 +131,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     private Link readLink(DataInputStream dis) throws IOException {
         String title = dis.readUTF();
         String url = dis.readUTF();
-        url = url.equals("null") ? null : url;
+        url = url.equals("") ? null : url;
         return new Link(title, url);
     }
 
@@ -146,7 +146,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         LocalDate startTime = readLocalDate(dis);
         LocalDate endTime = readLocalDate(dis);
         String description = dis.readUTF();
-        description = description.equals("null") ? null : description;
+        description = description.equals("") ? null : description;
         return new Position(title, startTime, endTime, description);
     }
 
