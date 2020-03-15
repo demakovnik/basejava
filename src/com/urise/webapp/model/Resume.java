@@ -77,12 +77,4 @@ public class Resume implements Serializable {
                 ", sections=" + sections +
                 '}';
     }
-
-    public void setContacts(Map<ContactType, String> contacts) {
-        this.contacts = contacts;
-    }
-
-    public void setSections(Map<SectionType, AbstractSection> sections) {
-        this.sections = sections;
-    }
 }

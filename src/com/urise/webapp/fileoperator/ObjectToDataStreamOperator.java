@@ -43,8 +43,8 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 sections.put(sectionType, readSection(dis));
             }
-            resume.setContacts(contacts);
-            resume.setSections(sections);
+            resume.getContacts().putAll(contacts);
+            resume.getSections().putAll(sections);
             return resume;
         }
     }
