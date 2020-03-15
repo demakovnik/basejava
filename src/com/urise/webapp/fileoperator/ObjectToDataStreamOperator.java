@@ -18,8 +18,8 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            Map<SectionType, AbstractSection> sections = resume.getSections();
             writeContacts(resume.getContacts(), dos);
+            Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
                 SectionType type = entry.getKey();
@@ -60,14 +60,14 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         writeLocalDate(position.getStartTime(), dos);
         writeLocalDate(position.getEndTime(), dos);
         String description = position.getDescription();
-        description = description == null ? "null" : description;
+        description = description == null ? "" : description;
         dos.writeUTF(description);
     }
 
     private void writeLink(Link link, DataOutputStream dos) throws IOException {
         dos.writeUTF(link.getTitle());
         String url = link.getUrl();
-        url = url == null ? "null" : url;
+        url = url == null ? "" : url;
         dos.writeUTF(url);
     }
 
@@ -82,18 +82,16 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
     private void writeSection(SectionType sectionType, AbstractSection section,
                               DataOutputStream dos) throws IOException {
-        List<String> stringList;
-        List<Organization> listOfExperienceOrEducation;
+        dos.writeUTF(sectionType.name());
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
-                dos.writeUTF(sectionType.name());
+
                 dos.writeUTF(((PersonalOrObjectiveSection) section).getText());
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                dos.writeUTF(sectionType.name());
-                stringList = ((AchievementOrQualificationsSection) section)
+                List<String> stringList = ((AchievementOrQualificationsSection) section)
                         .getListOfAchievementsOrQualifications();
                 dos.writeInt(stringList.size());
                 for (String s : stringList) {
@@ -102,8 +100,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                 break;
             case EDUCATION:
             case EXPERIENCE:
-                dos.writeUTF(sectionType.name());
-                listOfExperienceOrEducation = ((ExperienceOrEducationSection) section)
+                List<Organization> listOfExperienceOrEducation = ((ExperienceOrEducationSection) section)
                         .getListOfExperienceOrEducation();
                 dos.writeInt(listOfExperienceOrEducation.size());
                 for (Organization organization : listOfExperienceOrEducation) {
@@ -171,7 +168,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         switch (st) {
             case PERSONAL:
             case OBJECTIVE:
-                result =  new PersonalOrObjectiveSection(dis.readUTF());
+                result = new PersonalOrObjectiveSection(dis.readUTF());
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
@@ -179,7 +176,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                 for (int i = 0; i < numberOfStrings; i++) {
                     stringList.add(dis.readUTF());
                 }
-                result =  new AchievementOrQualificationsSection(stringList);
+                result = new AchievementOrQualificationsSection(stringList);
                 break;
             case EXPERIENCE:
             case EDUCATION:
