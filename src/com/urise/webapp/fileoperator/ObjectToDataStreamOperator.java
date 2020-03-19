@@ -6,10 +6,7 @@ import com.urise.webapp.util.DateUtil;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
@@ -20,13 +17,12 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             dos.writeUTF(resume.getFullName());
             writeContacts(resume.getContacts(), dos);
             Map<SectionType, AbstractSection> sections = resume.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-                SectionType type = entry.getKey();
-                AbstractSection section = entry.getValue();
+            writeCollectionToDataStream(sections.entrySet(),dos, value -> {
+                SectionType type = value.getKey();
+                AbstractSection section = value.getValue();
                 dos.writeUTF(type.name());
-                writeSection(entry.getKey(), section, dos);
-            }
+                writeSection(type,section,dos);
+            });
         }
     }
 
@@ -73,11 +69,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
     private void writeOrganization(Organization org, DataOutputStream dos) throws IOException {
         writeLink(org.getLink(), dos);
-        List<Position> positionList = org.getPositionList();
-        dos.writeInt(positionList.size());
-        for (Position position : positionList) {
-            writePosition(position, dos);
-        }
+        writeCollectionToDataStream(org.getPositionList(), dos, value -> writePosition(value, dos));
     }
 
     private void writeSection(SectionType sectionType, AbstractSection section,
@@ -92,33 +84,37 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                List<String> stringList = ((AchievementOrQualificationsSection) section)
-                        .getListOfAchievementsOrQualifications();
-                dos.writeInt(stringList.size());
-                for (String s : stringList) {
-                    dos.writeUTF(s);
-                }
+                writeCollectionToDataStream(((AchievementOrQualificationsSection) section)
+                                .getListOfAchievementsOrQualifications(), dos,
+                        value -> dos.writeUTF(value));
                 break;
 
             case EDUCATION:
             case EXPERIENCE:
-                List<Organization> listOfExperienceOrEducation = ((ExperienceOrEducationSection) section)
-                        .getListOfExperienceOrEducation();
-                dos.writeInt(listOfExperienceOrEducation.size());
-                for (Organization organization : listOfExperienceOrEducation) {
-                    writeOrganization(organization, dos);
-                }
+                writeCollectionToDataStream(((ExperienceOrEducationSection) section)
+                        .getListOfExperienceOrEducation(), dos,
+                        value -> writeOrganization(value, dos));
                 break;
         }
     }
 
-    private void writeContacts(Map<ContactType, String> contacts, DataOutputStream dos) throws IOException {
-        dos.writeInt(contacts.size());
-
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-            dos.writeUTF(entry.getKey().name());
-            dos.writeUTF(entry.getValue());
+    private <T> void writeCollectionToDataStream(Collection<T> collection, DataOutputStream dataOutputStream, CollectionWriter<T> writer) throws IOException {
+        dataOutputStream.writeInt(collection.size());
+        for (T value : collection) {
+            writer.writeOperation(value);
         }
+    }
+
+    @FunctionalInterface
+    interface CollectionWriter<T> {
+        void writeOperation(T value) throws IOException;
+    }
+
+    private void writeContacts(Map<ContactType, String> contacts, DataOutputStream dos) throws IOException {
+        writeCollectionToDataStream(contacts.entrySet(), dos, value -> {
+            dos.writeUTF(value.getKey().name());
+            dos.writeUTF(value.getValue());
+        });
     }
 
     private EnumMap<ContactType, String> readContacts(DataInputStream dis) throws IOException {
