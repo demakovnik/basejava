@@ -33,12 +33,12 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
             EnumMap<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
-            EnumMap<ContactType, String> contacts = readContacts(dis);
+            EnumMap<ContactType, String> contacts = readContacts(dis,new EnumMap<ContactType, String>(ContactType.class));
             readCollectionFromDataStream(sections.entrySet(), dis,
-                    section -> {
-                        SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                        sections.put(sectionType, readSection(dis, sectionType));
-                    });
+                    (dataInputStream, collection) -> {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                sections.put(sectionType, readSection(dis, sectionType));
+            });
             resume.getContacts().putAll(contacts);
             resume.getSections().putAll(sections);
             return resume;
@@ -107,7 +107,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                                                            CollectionReader reader) throws IOException {
         int size = dataInputStream.readInt();
         for (int i = 0; i < size; i++) {
-            reader.readOperation(dataInputStream);
+            reader.readOperation(dataInputStream, collection);
         }
         return collection;
     }
@@ -118,8 +118,8 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     }
 
     @FunctionalInterface
-    interface CollectionReader {
-        void readOperation(DataInputStream dataInputStream) throws IOException;
+    interface CollectionReader<T> {
+        void readOperation(DataInputStream dataInputStream, Collection<T> collection) throws IOException;
     }
 
     private void writeContacts(Map<ContactType, String> contacts, DataOutputStream dos) throws IOException {
@@ -129,17 +129,22 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         });
     }
 
-    private EnumMap<ContactType, String> readContacts(DataInputStream dis) throws IOException {
-        EnumMap<ContactType, String> result = new EnumMap<>(ContactType.class);
-        readCollectionFromDataStream(result.entrySet(), dis, (dataInputStream) -> {
-            ContactType contactType = ContactType.valueOf(dis.readUTF());
-            String string = dis.readUTF();
-            result.put(contactType, string);
-        });
+    private EnumMap<ContactType, String> readContacts(DataInputStream dis, EnumMap<ContactType, String> contacts) throws IOException {
 
-        return result;
+        readCollectionFromDataStream(contacts.entrySet(), dis, new CollectionReader() {
+            @Override
+            public void readOperation(DataInputStream dataInputStream, Collection collection) throws IOException {
+                ContactType contactType = ContactType.valueOf(dis.readUTF());
+                String string = dis.readUTF();
+                contacts.put(contactType, string);
+            }
+        });
+        return contacts;
     }
 
+    /*ContactType contactType = ContactType.valueOf(dis.readUTF());
+            String string = dis.readUTF();
+            contacts.put(contactType, string);*/
     private Link readLink(DataInputStream dis) throws IOException {
         String title = dis.readUTF();
         String url = dis.readUTF();
@@ -165,11 +170,15 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     private Organization readOrganization(DataInputStream dis) throws IOException {
         Link link = readLink(dis);
         List<Position> positionList = new ArrayList<>();
-        readCollectionFromDataStream(positionList, dis, (dataInputStream) -> {
-            positionList.add(readPosition(dis));
+        readCollectionFromDataStream(positionList, dis, new CollectionReader() {
+            @Override
+            public void readOperation(DataInputStream dataInputStream, Collection collection) throws IOException {
+                positionList.add(readPosition(dis));
+            }
         });
         return new Organization(link, positionList);
     }
+
 
     private AbstractSection readSection(DataInputStream dis, SectionType st) throws IOException {
         AbstractSection result = null;
@@ -181,18 +190,31 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 List<String> stringList = new ArrayList<>();
-                readCollectionFromDataStream(stringList, dis, dataInputStream -> stringList.add(dis.readUTF()));
+                readCollectionFromDataStream(stringList, dis, new CollectionReader() {
+                    @Override
+                    public void readOperation(DataInputStream dataInputStream, Collection collection) throws IOException {
+                        stringList.add(dis.readUTF());
+                    }
+                });
                 result = new AchievementOrQualificationsSection(stringList);
                 break;
+
             case EXPERIENCE:
             case EDUCATION:
                 List<Organization> organizationList = new ArrayList<>();
                 readCollectionFromDataStream(organizationList,
                         dis,
-                        dataInputStream -> organizationList.add(readOrganization(dis)));
-                result = new ExperienceOrEducationSection(organizationList);
+                        new CollectionReader() {
+                            @Override
+                            public void readOperation(DataInputStream dataInputStream, Collection collection) throws IOException {
+                                organizationList.add(readOrganization(dis));
+                            }
+                        });
+                        result = new ExperienceOrEducationSection(organizationList);
                 break;
         }
         return result;
     }
+
+
 }
