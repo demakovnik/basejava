@@ -33,12 +33,12 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
             EnumMap<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
-            EnumMap<ContactType, String> contacts = readContacts(dis,new EnumMap<ContactType, String>(ContactType.class));
-            readCollectionFromDataStream(sections.entrySet(), dis,
-                    (dataInputStream, collection) -> {
-                SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                sections.put(sectionType, readSection(dis, sectionType));
-            });
+            EnumMap<ContactType, String> contacts = readContacts(dis, new EnumMap<ContactType, String>(ContactType.class));
+            readCollectionFromDataStream(sections.entrySet(), dis, (dataInputStream, collection) -> {
+                        SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                        sections.put(sectionType, readSection(dis, sectionType));
+                    }
+            );
             resume.getContacts().putAll(contacts);
             resume.getSections().putAll(sections);
             return resume;
@@ -131,20 +131,14 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
     private EnumMap<ContactType, String> readContacts(DataInputStream dis, EnumMap<ContactType, String> contacts) throws IOException {
 
-        readCollectionFromDataStream(contacts.entrySet(), dis, new CollectionReader() {
-            @Override
-            public void readOperation(DataInputStream dataInputStream, Collection collection) throws IOException {
-                ContactType contactType = ContactType.valueOf(dis.readUTF());
-                String string = dis.readUTF();
-                contacts.put(contactType, string);
-            }
+        readCollectionFromDataStream(contacts.entrySet(), dis, (dataInputStream, collection) -> {
+            ContactType contactType = ContactType.valueOf(dis.readUTF());
+            String string = dis.readUTF();
+            contacts.put(contactType, string);
         });
         return contacts;
     }
 
-    /*ContactType contactType = ContactType.valueOf(dis.readUTF());
-            String string = dis.readUTF();
-            contacts.put(contactType, string);*/
     private Link readLink(DataInputStream dis) throws IOException {
         String title = dis.readUTF();
         String url = dis.readUTF();
@@ -170,15 +164,9 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     private Organization readOrganization(DataInputStream dis) throws IOException {
         Link link = readLink(dis);
         List<Position> positionList = new ArrayList<>();
-        readCollectionFromDataStream(positionList, dis, new CollectionReader() {
-            @Override
-            public void readOperation(DataInputStream dataInputStream, Collection collection) throws IOException {
-                positionList.add(readPosition(dis));
-            }
-        });
+        readCollectionFromDataStream(positionList, dis, (dataInputStream, collection) -> positionList.add(readPosition(dis)));
         return new Organization(link, positionList);
     }
-
 
     private AbstractSection readSection(DataInputStream dis, SectionType st) throws IOException {
         AbstractSection result = null;
@@ -190,12 +178,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 List<String> stringList = new ArrayList<>();
-                readCollectionFromDataStream(stringList, dis, new CollectionReader() {
-                    @Override
-                    public void readOperation(DataInputStream dataInputStream, Collection collection) throws IOException {
-                        stringList.add(dis.readUTF());
-                    }
-                });
+                readCollectionFromDataStream(stringList, dis, (dataInputStream, collection) -> stringList.add(dis.readUTF()));
                 result = new AchievementOrQualificationsSection(stringList);
                 break;
 
@@ -204,17 +187,10 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                 List<Organization> organizationList = new ArrayList<>();
                 readCollectionFromDataStream(organizationList,
                         dis,
-                        new CollectionReader() {
-                            @Override
-                            public void readOperation(DataInputStream dataInputStream, Collection collection) throws IOException {
-                                organizationList.add(readOrganization(dis));
-                            }
-                        });
-                        result = new ExperienceOrEducationSection(organizationList);
+                        (dataInputStream, collection) -> organizationList.add(readOrganization(dis)));
+                result = new ExperienceOrEducationSection(organizationList);
                 break;
         }
         return result;
     }
-
-
 }
