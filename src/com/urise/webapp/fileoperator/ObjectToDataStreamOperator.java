@@ -17,11 +17,11 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             dos.writeUTF(resume.getFullName());
             writeContacts(resume.getContacts(), dos);
             Map<SectionType, AbstractSection> sections = resume.getSections();
-            writeCollectionToDataStream(sections.entrySet(),dos, value -> {
+            writeCollectionToDataStream(sections.entrySet(), dos, value -> {
                 SectionType type = value.getKey();
                 AbstractSection section = value.getValue();
                 dos.writeUTF(type.name());
-                writeSection(type,section,dos);
+                writeSection(type, section, dos);
             });
         }
     }
@@ -34,17 +34,16 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             Resume resume = new Resume(uuid, fullName);
             EnumMap<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
             EnumMap<ContactType, String> contacts = readContacts(dis);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                sections.put(sectionType, readSection(dis));
-            }
+            readCollectionFromDataStream(sections.entrySet(), dis,
+                    section -> {
+                        SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                        sections.put(sectionType, readSection(dis, sectionType));
+                    });
             resume.getContacts().putAll(contacts);
             resume.getSections().putAll(sections);
             return resume;
         }
     }
-
 
     private void writeLocalDate(LocalDate date, DataOutputStream dos) throws IOException {
         dos.writeInt(date.getYear());
@@ -74,8 +73,6 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
     private void writeSection(SectionType sectionType, AbstractSection section,
                               DataOutputStream dos) throws IOException {
-        dos.writeUTF(sectionType.name());
-
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
@@ -92,7 +89,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             case EDUCATION:
             case EXPERIENCE:
                 writeCollectionToDataStream(((ExperienceOrEducationSection) section)
-                        .getListOfExperienceOrEducation(), dos,
+                                .getListOfExperienceOrEducation(), dos,
                         value -> writeOrganization(value, dos));
                 break;
         }
@@ -105,9 +102,24 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         }
     }
 
+    private <T> Collection<T> readCollectionFromDataStream(Collection<T> collection,
+                                                           DataInputStream dataInputStream,
+                                                           CollectionReader reader) throws IOException {
+        int size = dataInputStream.readInt();
+        for (int i = 0; i < size; i++) {
+            reader.readOperation(dataInputStream);
+        }
+        return collection;
+    }
+
     @FunctionalInterface
     interface CollectionWriter<T> {
         void writeOperation(T value) throws IOException;
+    }
+
+    @FunctionalInterface
+    interface CollectionReader {
+        void readOperation(DataInputStream dataInputStream) throws IOException;
     }
 
     private void writeContacts(Map<ContactType, String> contacts, DataOutputStream dos) throws IOException {
@@ -119,11 +131,12 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
     private EnumMap<ContactType, String> readContacts(DataInputStream dis) throws IOException {
         EnumMap<ContactType, String> result = new EnumMap<>(ContactType.class);
-        int sizeOfContacts = dis.readInt();
-        for (int i = 0; i < sizeOfContacts; i++) {
+        readCollectionFromDataStream(result.entrySet(), dis, (dataInputStream) -> {
             ContactType contactType = ContactType.valueOf(dis.readUTF());
-            result.put(contactType, dis.readUTF());
-        }
+            String string = dis.readUTF();
+            result.put(contactType, string);
+        });
+
         return result;
     }
 
@@ -152,41 +165,31 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
     private Organization readOrganization(DataInputStream dis) throws IOException {
         Link link = readLink(dis);
         List<Position> positionList = new ArrayList<>();
-
-        int numberOfPositions = dis.readInt();
-        for (int i = 0; i < numberOfPositions; i++) {
+        readCollectionFromDataStream(positionList, dis, (dataInputStream) -> {
             positionList.add(readPosition(dis));
-        }
+        });
         return new Organization(link, positionList);
     }
 
-    private AbstractSection readSection(DataInputStream dis) throws IOException {
+    private AbstractSection readSection(DataInputStream dis, SectionType st) throws IOException {
         AbstractSection result = null;
-        SectionType st = SectionType.valueOf(dis.readUTF());
-
         switch (st) {
             case PERSONAL:
             case OBJECTIVE:
                 result = new PersonalOrObjectiveSection(dis.readUTF());
                 break;
-
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                int numberOfStrings = dis.readInt();
                 List<String> stringList = new ArrayList<>();
-                for (int i = 0; i < numberOfStrings; i++) {
-                    stringList.add(dis.readUTF());
-                }
+                readCollectionFromDataStream(stringList, dis, dataInputStream -> stringList.add(dis.readUTF()));
                 result = new AchievementOrQualificationsSection(stringList);
                 break;
-
             case EXPERIENCE:
             case EDUCATION:
                 List<Organization> organizationList = new ArrayList<>();
-                int numberOfOrgs = dis.readInt();
-                for (int i = 0; i < numberOfOrgs; i++) {
-                    organizationList.add(readOrganization(dis));
-                }
+                readCollectionFromDataStream(organizationList,
+                        dis,
+                        dataInputStream -> organizationList.add(readOrganization(dis)));
                 result = new ExperienceOrEducationSection(organizationList);
                 break;
         }
