@@ -15,13 +15,51 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            writeContacts(resume.getContacts(), dos);
+            writeCollectionToDataStream(resume.getContacts().entrySet(), dos, (value) -> {
+                dos.writeUTF(value.getKey().name());
+                dos.writeUTF(value.getValue());
+            });
+
             Map<SectionType, AbstractSection> sections = resume.getSections();
             writeCollectionToDataStream(sections.entrySet(), dos, value -> {
-                SectionType type = value.getKey();
+                SectionType sectionType = value.getKey();
                 AbstractSection section = value.getValue();
-                dos.writeUTF(type.name());
-                writeSection(type, section, dos);
+                dos.writeUTF(sectionType.name());
+
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        dos.writeUTF(((PersonalOrObjectiveSection) section).getText());
+                        break;
+
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        writeCollectionToDataStream(((AchievementOrQualificationsSection) section)
+                                        .getListOfAchievementsOrQualifications(), dos,
+                                s -> dos.writeUTF(s));
+                        break;
+
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        writeCollectionToDataStream(((ExperienceOrEducationSection) section)
+                                        .getListOfExperienceOrEducation(), dos,
+                                org -> {
+                                    writeLink(org.getLink(), dos);
+                                    writeCollectionToDataStream(org.getPositionList(), dos, position -> {
+                                        dos.writeUTF(position.getTitle());
+                                        LocalDate startTime = position.getStartTime();
+                                        LocalDate endTime = position.getEndTime();
+                                        dos.writeInt(startTime.getYear());
+                                        dos.writeInt(startTime.getMonthValue());
+                                        dos.writeInt(endTime.getYear());
+                                        dos.writeInt(endTime.getMonthValue());
+                                        String description = position.getDescription();
+                                        description = description == null ? "" : description;
+                                        dos.writeUTF(description);
+                                    });
+                                });
+                        break;
+                }
             });
         }
     }
@@ -32,31 +70,66 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            EnumMap<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
-            EnumMap<ContactType, String> contacts = readContacts(dis, new EnumMap<ContactType, String>(ContactType.class));
-            readCollectionFromDataStream(sections.entrySet(), dis, (dataInputStream, collection) -> {
+
+            readCollectionFromDataStream(dis, () -> {
+                ContactType contactType = ContactType.valueOf(dis.readUTF());
+                String string = dis.readUTF();
+                resume.putContact(contactType, string);
+            });
+
+            readCollectionFromDataStream(dis, () -> {
+                        AbstractSection section;
                         SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                        sections.put(sectionType, readSection(dis, sectionType));
-                    }
-            );
-            resume.getContacts().putAll(contacts);
-            resume.getSections().putAll(sections);
+                        switch (sectionType) {
+                            case PERSONAL:
+                            case OBJECTIVE:
+                                section = new PersonalOrObjectiveSection(dis.readUTF());
+                                break;
+
+                            case ACHIEVEMENT:
+                            case QUALIFICATIONS:
+                                List<String> stringList = new ArrayList<>();
+                                readCollectionFromDataStream(dis,
+                                        () -> stringList.add(dis.readUTF()));
+                                section = new AchievementOrQualificationsSection(stringList);
+                                break;
+
+                            case EXPERIENCE:
+                            case EDUCATION:
+                                List<Organization> organizationList = new ArrayList<>();
+                                readCollectionFromDataStream(dis,
+                                        () -> {
+                                            Link link = readLink(dis);
+                                            List<Position> positionList = new ArrayList<>();
+                                            readCollectionFromDataStream(dis,
+                                                    () -> {
+                                                        String title = dis.readUTF();
+                                                        LocalDate startTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
+                                                        LocalDate endTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
+                                                        String description = dis.readUTF();
+                                                        description = description.equals("") ? null : description;
+                                                        positionList.add(new Position(title, startTime, endTime, description));
+                                                    }
+                                            );
+                                            organizationList.add(new Organization(link, positionList));
+
+                                        });
+
+                                section = new ExperienceOrEducationSection(organizationList);
+                                break;
+
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + sectionType);
+                        }
+                        resume.putSection(sectionType, section);
+                    });
             return resume;
         }
     }
 
-    private void writeLocalDate(LocalDate date, DataOutputStream dos) throws IOException {
-        dos.writeInt(date.getYear());
-        dos.writeInt(date.getMonthValue());
-    }
-
-    private void writePosition(Position position, DataOutputStream dos) throws IOException {
-        dos.writeUTF(position.getTitle());
-        writeLocalDate(position.getStartTime(), dos);
-        writeLocalDate(position.getEndTime(), dos);
-        String description = position.getDescription();
-        description = description == null ? "" : description;
-        dos.writeUTF(description);
+    @FunctionalInterface
+    interface CollectionWriter<T> {
+        void writeOperation(T value) throws IOException;
     }
 
     private void writeLink(Link link, DataOutputStream dos) throws IOException {
@@ -66,77 +139,25 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         dos.writeUTF(url);
     }
 
-    private void writeOrganization(Organization org, DataOutputStream dos) throws IOException {
-        writeLink(org.getLink(), dos);
-        writeCollectionToDataStream(org.getPositionList(), dos, value -> writePosition(value, dos));
-    }
-
-    private void writeSection(SectionType sectionType, AbstractSection section,
-                              DataOutputStream dos) throws IOException {
-        switch (sectionType) {
-            case PERSONAL:
-            case OBJECTIVE:
-                dos.writeUTF(((PersonalOrObjectiveSection) section).getText());
-                break;
-
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                writeCollectionToDataStream(((AchievementOrQualificationsSection) section)
-                                .getListOfAchievementsOrQualifications(), dos,
-                        value -> dos.writeUTF(value));
-                break;
-
-            case EDUCATION:
-            case EXPERIENCE:
-                writeCollectionToDataStream(((ExperienceOrEducationSection) section)
-                                .getListOfExperienceOrEducation(), dos,
-                        value -> writeOrganization(value, dos));
-                break;
-        }
-    }
-
-    private <T> void writeCollectionToDataStream(Collection<T> collection, DataOutputStream dataOutputStream, CollectionWriter<T> writer) throws IOException {
+    private <T> void writeCollectionToDataStream(Collection<T> collection,
+                                                 DataOutputStream dataOutputStream, CollectionWriter<T> writer) throws IOException {
         dataOutputStream.writeInt(collection.size());
         for (T value : collection) {
             writer.writeOperation(value);
         }
     }
 
-    private <T> Collection<T> readCollectionFromDataStream(Collection<T> collection,
-                                                           DataInputStream dataInputStream,
-                                                           CollectionReader reader) throws IOException {
+    @FunctionalInterface
+    interface CollectionReader {
+        void readOperation() throws IOException;
+    }
+
+    private void readCollectionFromDataStream(DataInputStream dataInputStream,
+                                              CollectionReader reader) throws IOException {
         int size = dataInputStream.readInt();
         for (int i = 0; i < size; i++) {
-            reader.readOperation(dataInputStream, collection);
+            reader.readOperation();
         }
-        return collection;
-    }
-
-    @FunctionalInterface
-    interface CollectionWriter<T> {
-        void writeOperation(T value) throws IOException;
-    }
-
-    @FunctionalInterface
-    interface CollectionReader<T> {
-        void readOperation(DataInputStream dataInputStream, Collection<T> collection) throws IOException;
-    }
-
-    private void writeContacts(Map<ContactType, String> contacts, DataOutputStream dos) throws IOException {
-        writeCollectionToDataStream(contacts.entrySet(), dos, value -> {
-            dos.writeUTF(value.getKey().name());
-            dos.writeUTF(value.getValue());
-        });
-    }
-
-    private EnumMap<ContactType, String> readContacts(DataInputStream dis, EnumMap<ContactType, String> contacts) throws IOException {
-
-        readCollectionFromDataStream(contacts.entrySet(), dis, (dataInputStream, collection) -> {
-            ContactType contactType = ContactType.valueOf(dis.readUTF());
-            String string = dis.readUTF();
-            contacts.put(contactType, string);
-        });
-        return contacts;
     }
 
     private Link readLink(DataInputStream dis) throws IOException {
@@ -144,53 +165,5 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         String url = dis.readUTF();
         url = url.equals("") ? null : url;
         return new Link(title, url);
-    }
-
-    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
-        int year = dis.readInt();
-        Month month = Month.of(dis.readInt());
-        return DateUtil.of(year, month);
-    }
-
-    private Position readPosition(DataInputStream dis) throws IOException {
-        String title = dis.readUTF();
-        LocalDate startTime = readLocalDate(dis);
-        LocalDate endTime = readLocalDate(dis);
-        String description = dis.readUTF();
-        description = description.equals("") ? null : description;
-        return new Position(title, startTime, endTime, description);
-    }
-
-    private Organization readOrganization(DataInputStream dis) throws IOException {
-        Link link = readLink(dis);
-        List<Position> positionList = new ArrayList<>();
-        readCollectionFromDataStream(positionList, dis, (dataInputStream, collection) -> positionList.add(readPosition(dis)));
-        return new Organization(link, positionList);
-    }
-
-    private AbstractSection readSection(DataInputStream dis, SectionType st) throws IOException {
-        AbstractSection result = null;
-        switch (st) {
-            case PERSONAL:
-            case OBJECTIVE:
-                result = new PersonalOrObjectiveSection(dis.readUTF());
-                break;
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                List<String> stringList = new ArrayList<>();
-                readCollectionFromDataStream(stringList, dis, (dataInputStream, collection) -> stringList.add(dis.readUTF()));
-                result = new AchievementOrQualificationsSection(stringList);
-                break;
-
-            case EXPERIENCE:
-            case EDUCATION:
-                List<Organization> organizationList = new ArrayList<>();
-                readCollectionFromDataStream(organizationList,
-                        dis,
-                        (dataInputStream, collection) -> organizationList.add(readOrganization(dis)));
-                result = new ExperienceOrEducationSection(organizationList);
-                break;
-        }
-        return result;
     }
 }

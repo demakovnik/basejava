@@ -25,6 +25,7 @@ public class Resume implements Serializable {
     public Resume() {
 
     }
+
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
@@ -76,5 +77,13 @@ public class Resume implements Serializable {
                 ", contacts=" + contacts +
                 ", sections=" + sections +
                 '}';
+    }
+
+    public void putContact(ContactType contactType, String value) {
+        contacts.put(contactType, value);
+    }
+
+    public void putSection(SectionType sectionType, AbstractSection section) {
+        sections.put(sectionType, section);
     }
 }
