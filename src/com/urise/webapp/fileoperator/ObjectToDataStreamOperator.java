@@ -35,8 +35,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         writeCollectionToDataStream(((AchievementOrQualificationsSection) section)
-                                        .getListOfAchievementsOrQualifications(), dos,
-                                s -> dos.writeUTF(s));
+                                .getListOfAchievementsOrQualifications(), dos, dos::writeUTF);
                         break;
 
                     case EDUCATION:
@@ -113,7 +112,6 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                                             }
                                     );
                                     organizationList.add(new Organization(link, positionList));
-
                                 });
 
                         section = new ExperienceOrEducationSection(organizationList);
