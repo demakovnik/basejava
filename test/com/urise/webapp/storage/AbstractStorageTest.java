@@ -2,14 +2,11 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.model.AchievementOrQualificationsSection;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.model.SectionType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -50,8 +47,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        Resume expectedResume = RESUME_4;
-        storage.save(expectedResume);
+        storage.save(RESUME_4);
         Assert.assertEquals(4, storage.size());
         Resume actualResume = storage.get(RESUME_4.getUuid());
         Assert.assertEquals(RESUME_4, actualResume);

@@ -3,11 +3,6 @@ package com.urise.webapp.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.urise.webapp.model.AbstractSection;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.Reader;
 import java.io.Writer;
 

@@ -3,7 +3,6 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.*;
 import com.urise.webapp.util.DateUtil;
 
-import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +18,7 @@ public class ResumeTestData {
     public static final Resume RESUMEDUMMY = new Resume("Dummy");
 
 
-    /**
-     * Инициализация RESUME1*/
+    //Инициализация RESUME1
     static {
         RESUME1.getContacts().put(ContactType.PHONENUMBER, "+7(921) 855-0482");
         RESUME1.getContacts().put(ContactType.SKYPE, "grigory.kislin");
@@ -71,10 +69,8 @@ public class ResumeTestData {
                 "шаблонов, UML, функционального программирования");
         qualifications.add("Родной русский, английский \"upper intermediate\"");
 
-        /**
-         * Добавляем организации
-         *
-         */
+        //Добавляем организации
+
         List<Organization> organizations = new ArrayList<>();
 
         //Добавляем 1 организацию
@@ -155,17 +151,13 @@ public class ResumeTestData {
                 DateUtil.of(2005, Month.JANUARY), "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."));
 
         organizations.add(new Organization("Alcatel", "http://www.alcatel.ru/", positionEightList));
-        //**************************************************************************************************
-        /**
-         * Добавляем секцию организаций в резюме
-         *
-         */
+
+        //Добавляем секцию организаций в резюме
         RESUME1.getSections().put(SectionType.EXPERIENCE, new ExperienceOrEducationSection(organizations));
 
-        /**
-         * Добавляем учебные заведения
-         *
-         */
+        //Добавляем учебные заведения
+
+
 
         List<Organization> educationals = new ArrayList<>();
 
@@ -244,8 +236,7 @@ public class ResumeTestData {
         //**************************************************************************************************
 
 
-        /**********************************************************************************************************/
-        /**
+        /*
          * Добавляем секцию учебных заведений в резюме
          *
          */
@@ -256,8 +247,7 @@ public class ResumeTestData {
     }
 
 
-    /**
-     * Инициализация RESUME2*/
+    //Инициализация RESUME2
     static {
         RESUME2.getContacts().put(ContactType.PHONENUMBER, "+0(000) 000-0000");
         RESUME2.getContacts().put(ContactType.SKYPE, "hello.world");
@@ -271,10 +261,7 @@ public class ResumeTestData {
         qualifications.add("На все руки мастер");
 
 
-        /**
-         * Добавляем организации
-         *
-         */
+        // Добавляем организации
         List<Organization> organizations = new ArrayList<>();
 
         //Добавляем 1 организацию
@@ -285,16 +272,10 @@ public class ResumeTestData {
         organizations.add(new Organization("Рога и копыта", "http://roga.ru/", positionOneList));
         //************************************************************************************************************
 
-        /**
-         * Добавляем секцию организаций в резюме
-         *
-         */
+        //Добавляем секцию организаций в резюме
         RESUME2.getSections().put(SectionType.EXPERIENCE, new ExperienceOrEducationSection(organizations));
 
-        /**
-         * Добавляем учебные заведения
-         *
-         */
+        //Добавляем учебные заведения
 
         List<Organization> educationals = new ArrayList<>();
 
@@ -307,19 +288,14 @@ public class ResumeTestData {
         educationals.add(new Organization("Детский сад \"Малыш\"", "https://malysh.ru", positionOneListEducation));
         //**************************************************************************************************
 
-        /**********************************************************************************************************/
-        /**
-         * Добавляем секцию учебных заведений в резюме
-         *
-         */
+        //Добавляем секцию учебных заведений в резюме
         RESUME2.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME2.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
         RESUME2.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
     }
 
-    /**
-     * Инициализация RESUME3*/
+    //Инициализация RESUME3
     static {
         RESUME3.getContacts().put(ContactType.PHONENUMBER, "+1(111) 111-1111");
         RESUME3.getContacts().put(ContactType.SKYPE, "hello.world");
@@ -333,10 +309,7 @@ public class ResumeTestData {
         qualifications.add("Все умею все могу");
 
 
-        /**
-         * Добавляем организации
-         *
-         */
+        //Добавляем организации
         List<Organization> organizations = new ArrayList<>();
 
         //Добавляем 1 организацию
@@ -347,18 +320,11 @@ public class ResumeTestData {
         organizations.add(new Organization("Рога и копыта", "http://roga.ru/", positionOneList));
         //************************************************************************************************************
 
-
         //**************************************************************************************************
-        /**
-         * Добавляем секцию организаций в резюме
-         *
-         */
+        //Добавляем секцию организаций в резюме
         RESUME3.getSections().put(SectionType.EXPERIENCE, new ExperienceOrEducationSection(organizations));
 
-        /**
-         * Добавляем учебные заведения
-         *
-         */
+        //Добавляем учебные заведения
 
         List<Organization> educationals = new ArrayList<>();
 
@@ -371,19 +337,14 @@ public class ResumeTestData {
         educationals.add(new Organization("Детский сад \"Бармалейка\"", "https://malysh.ru", positionOneListEducation));
         //**************************************************************************************************
 
-        /**********************************************************************************************************/
-        /**
-         * Добавляем секцию учебных заведений в резюме
-         *
-         */
+        //Добавляем секцию учебных заведений в резюме
         RESUME3.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME3.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
         RESUME3.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
     }
 
-    /**
-     * Инициализация RESUME4*/
+    //Инициализация RESUME4
     static {
         RESUME4.getContacts().put(ContactType.PHONENUMBER, "+2(222) 222-2222");
         RESUME4.getContacts().put(ContactType.SKYPE, "preved.medved");
@@ -411,10 +372,7 @@ public class ResumeTestData {
                 "шаблонов, UML, функционального программирования");
         qualifications.add("Родной русский, английский \"upper intermediate\"");
 
-        /**
-         * Добавляем организации
-         *
-         */
+        //Добавляем организации
         List<Organization> organizations = new ArrayList<>();
 
         //Добавляем 1 организацию
@@ -455,16 +413,10 @@ public class ResumeTestData {
         organizations.add(new Organization("Siemens AG", "https://www.siemens.com/ru/ru/home.html", positionSevenList));
         //**************************************************************************************************
 
-        /**
-         * Добавляем секцию организаций в резюме
-         *
-         */
+        //Добавляем секцию организаций в резюме
         RESUME4.getSections().put(SectionType.EXPERIENCE, new ExperienceOrEducationSection(organizations));
 
-        /**
-         * Добавляем учебные заведения
-         *
-         */
+        //Добавляем учебные заведения
 
         List<Organization> educationals = new ArrayList<>();
 
@@ -529,11 +481,7 @@ public class ResumeTestData {
                 positionSixListEducation));
         //**************************************************************************************************
 
-        /**********************************************************************************************************/
-        /**
-         * Добавляем секцию учебных заведений в резюме
-         *
-         */
+        //Добавляем секцию учебных заведений в резюме
         RESUME4.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME4.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));

@@ -79,7 +79,7 @@ public class MainStorageTest {
         if (STORAGE.size() == 0) {
             System.out.println("Empty");
         } else {
-            STORAGE.getAllSorted().stream().forEach(System.out::println);
+            STORAGE.getAllSorted().forEach(System.out::println);
         }
         System.out.println("----------------------------");
     }

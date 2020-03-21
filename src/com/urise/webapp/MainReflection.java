@@ -23,9 +23,9 @@ public class MainReflection {
         Method method = resume.getClass().getMethod("toString");
         System.out.println(method.invoke(resume));
         Map<String,String> map = new HashMap<>();
-        map.put("hello1".intern(),"hello1value".intern());
-        map.put("hello2".intern(),"hello2vv".intern());
-        map.put("hello3".intern(),"hello3ff".intern());
+        map.put("hello1", "hello1value");
+        map.put("hello2", "hello2vv");
+        map.put("hello3", "hello3ff");
         Iterator<Map.Entry<String,String>> iterator = map.entrySet().iterator();
         Map.Entry<String,String> entry0 = null;
         Map.Entry<String,String> entry;
