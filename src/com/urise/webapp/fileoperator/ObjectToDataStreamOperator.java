@@ -69,6 +69,7 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         try (DataInputStream dis = new DataInputStream(is)) {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
+
             Resume resume = new Resume(uuid, fullName);
 
             readCollectionFromDataStream(dis, () -> {
