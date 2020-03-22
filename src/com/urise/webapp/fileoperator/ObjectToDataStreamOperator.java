@@ -73,14 +73,15 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
 
             Resume resume = new Resume(uuid, fullName);
 
-            readCollectionFromDataStream(dis, () -> {
+            readCollectionFromDataStream(dis, () ->
+            {
                 ContactType contactType = ContactType.valueOf(dis.readUTF());
                 String string = dis.readUTF();
                 resume.putContact(contactType, string);
             });
 
-            readCollectionFromDataStream(dis, ()
-                    -> {
+            readCollectionFromDataStream(dis, () ->
+            {
                 AbstractSection section;
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
@@ -92,8 +93,8 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> stringList = new ArrayList<>();
-                        readCollectionFromDataStream(dis, ()
-                                -> stringList.add(dis.readUTF()));
+                        readCollectionFromDataStream(dis, () ->
+                                stringList.add(dis.readUTF()));
 
                         section = new AchievementOrQualificationsSection(stringList);
                         break;
@@ -101,13 +102,13 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Organization> organizationList = new ArrayList<>();
-                        readCollectionFromDataStream(dis, ()
-                                -> {
+                        readCollectionFromDataStream(dis, () ->
+                        {
                             Link link = readLink(dis);
                             List<Position> positionList = new ArrayList<>();
 
-                            readCollectionFromDataStream(dis, ()
-                                            -> {
+                            readCollectionFromDataStream(dis, () ->
+                                    {
                                         String title = dis.readUTF();
 
                                         LocalDate startTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
@@ -117,8 +118,8 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                                         description = description.equals("") ? null : description;
 
                                         positionList.add(new Position(title, startTime, endTime, description));
-                                    }
-                            );
+                                    });
+
                             organizationList.add(new Organization(link, positionList));
                         });
 
