@@ -15,9 +15,10 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            writeCollectionToDataStream(resume.getContacts().entrySet(), dos, (value) -> {
-                dos.writeUTF(value.getKey().name());
-                dos.writeUTF(value.getValue());
+            writeCollectionToDataStream(resume.getContacts().entrySet(), dos, (contact) ->
+            {
+                dos.writeUTF(contact.getKey().name());
+                dos.writeUTF(contact.getValue());
             });
 
             Map<SectionType, AbstractSection> sections = resume.getSections();
@@ -41,23 +42,23 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                     case EDUCATION:
                     case EXPERIENCE:
                         writeCollectionToDataStream(((ExperienceOrEducationSection) section)
-                                        .getListOfExperienceOrEducation(), dos,
-                                org -> {
-                                    writeLink(org.getLink(), dos);
-                                    writeCollectionToDataStream(org.getPositionList(), dos,
-                                            position -> {
-                                                dos.writeUTF(position.getTitle());
-                                                LocalDate startTime = position.getStartTime();
-                                                LocalDate endTime = position.getEndTime();
-                                                dos.writeInt(startTime.getYear());
-                                                dos.writeInt(startTime.getMonthValue());
-                                                dos.writeInt(endTime.getYear());
-                                                dos.writeInt(endTime.getMonthValue());
-                                                String description = position.getDescription();
-                                                description = description == null ? "" : description;
-                                                dos.writeUTF(description);
-                                            });
-                                });
+                                .getListOfExperienceOrEducation(), dos, org ->
+                        {
+                            writeLink(org.getLink(), dos);
+                            writeCollectionToDataStream(org.getPositionList(), dos, position ->
+                            {
+                                dos.writeUTF(position.getTitle());
+
+                                dos.writeInt(position.getStartTime().getYear());
+                                dos.writeInt(position.getStartTime().getMonthValue());
+                                dos.writeInt(position.getEndTime().getYear());
+                                dos.writeInt(position.getEndTime().getMonthValue());
+
+                                String description = position.getDescription();
+                                description = description == null ? "" : description;
+                                dos.writeUTF(description);
+                            });
+                        });
                         break;
                 }
             });
@@ -78,7 +79,8 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                 resume.putContact(contactType, string);
             });
 
-            readCollectionFromDataStream(dis, () -> {
+            readCollectionFromDataStream(dis, ()
+                    -> {
                 AbstractSection section;
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
@@ -90,30 +92,35 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> stringList = new ArrayList<>();
-                        readCollectionFromDataStream(dis,
-                                () -> stringList.add(dis.readUTF()));
+                        readCollectionFromDataStream(dis, ()
+                                -> stringList.add(dis.readUTF()));
+
                         section = new AchievementOrQualificationsSection(stringList);
                         break;
 
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Organization> organizationList = new ArrayList<>();
-                        readCollectionFromDataStream(dis,
-                                () -> {
-                                    Link link = readLink(dis);
-                                    List<Position> positionList = new ArrayList<>();
-                                    readCollectionFromDataStream(dis,
-                                            () -> {
-                                                String title = dis.readUTF();
-                                                LocalDate startTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
-                                                LocalDate endTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
-                                                String description = dis.readUTF();
-                                                description = description.equals("") ? null : description;
-                                                positionList.add(new Position(title, startTime, endTime, description));
-                                            }
-                                    );
-                                    organizationList.add(new Organization(link, positionList));
-                                });
+                        readCollectionFromDataStream(dis, ()
+                                -> {
+                            Link link = readLink(dis);
+                            List<Position> positionList = new ArrayList<>();
+
+                            readCollectionFromDataStream(dis, ()
+                                            -> {
+                                        String title = dis.readUTF();
+
+                                        LocalDate startTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
+                                        LocalDate endTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
+
+                                        String description = dis.readUTF();
+                                        description = description.equals("") ? null : description;
+
+                                        positionList.add(new Position(title, startTime, endTime, description));
+                                    }
+                            );
+                            organizationList.add(new Organization(link, positionList));
+                        });
 
                         section = new ExperienceOrEducationSection(organizationList);
                         break;
