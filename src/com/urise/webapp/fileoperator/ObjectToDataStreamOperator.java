@@ -49,10 +49,8 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                             {
                                 dos.writeUTF(position.getTitle());
 
-                                dos.writeInt(position.getStartTime().getYear());
-                                dos.writeInt(position.getStartTime().getMonthValue());
-                                dos.writeInt(position.getEndTime().getYear());
-                                dos.writeInt(position.getEndTime().getMonthValue());
+                                writeLocalDate(dos,position.getStartTime());
+                                writeLocalDate(dos,position.getEndTime());
 
                                 String description = position.getDescription();
                                 description = description == null ? "" : description;
@@ -108,17 +106,17 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
                             List<Position> positionList = new ArrayList<>();
 
                             readCollectionFromDataStream(dis, () ->
-                                    {
-                                        String title = dis.readUTF();
+                            {
+                                String title = dis.readUTF();
 
-                                        LocalDate startTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
-                                        LocalDate endTime = DateUtil.of(dis.readInt(), Month.of(dis.readInt()));
+                                LocalDate startTime = readDate(dis);
+                                LocalDate endTime = readDate(dis);
 
-                                        String description = dis.readUTF();
-                                        description = description.equals("") ? null : description;
+                                String description = dis.readUTF();
+                                description = description.equals("") ? null : description;
 
-                                        positionList.add(new Position(title, startTime, endTime, description));
-                                    });
+                                positionList.add(new Position(title, startTime, endTime, description));
+                            });
 
                             organizationList.add(new Organization(link, positionList));
                         });
@@ -134,6 +132,16 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             return resume;
         }
     }
+
+    private LocalDate readDate(DataInputStream dataInputStream) throws IOException {
+        return DateUtil.of(dataInputStream.readInt(), Month.of(dataInputStream.readInt()));
+    }
+
+    private void writeLocalDate(DataOutputStream dataInputStream, LocalDate date) throws IOException {
+        dataInputStream.writeInt(date.getYear());
+        dataInputStream.writeInt(date.getMonthValue());
+    }
+
 
     @FunctionalInterface
     interface CollectionWriter<T> {
