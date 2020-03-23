@@ -22,7 +22,8 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
             });
 
             Map<SectionType, AbstractSection> sections = resume.getSections();
-            writeCollectionToDataStream(sections.entrySet(), dos, value -> {
+            writeCollectionToDataStream(sections.entrySet(), dos, value ->
+            {
                 SectionType sectionType = value.getKey();
                 AbstractSection section = value.getValue();
                 dos.writeUTF(sectionType.name());
