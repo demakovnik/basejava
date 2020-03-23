@@ -133,15 +133,6 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         }
     }
 
-    private LocalDate readDate(DataInputStream dataInputStream) throws IOException {
-        return DateUtil.of(dataInputStream.readInt(), Month.of(dataInputStream.readInt()));
-    }
-
-    private void writeLocalDate(DataOutputStream dataInputStream, LocalDate date) throws IOException {
-        dataInputStream.writeInt(date.getYear());
-        dataInputStream.writeInt(date.getMonthValue());
-    }
-
 
     @FunctionalInterface
     interface CollectionWriter<T> {
@@ -153,6 +144,11 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         String url = link.getUrl();
         url = url == null ? "" : url;
         dos.writeUTF(url);
+    }
+
+    private void writeLocalDate(DataOutputStream dataInputStream, LocalDate date) throws IOException {
+        dataInputStream.writeInt(date.getYear());
+        dataInputStream.writeInt(date.getMonthValue());
     }
 
     private <T> void writeCollectionToDataStream(Collection<T> collection,
@@ -181,5 +177,9 @@ public class ObjectToDataStreamOperator implements FileStorageStrategy {
         String url = dis.readUTF();
         url = url.equals("") ? null : url;
         return new Link(title, url);
+    }
+
+    private LocalDate readDate(DataInputStream dataInputStream) throws IOException {
+        return DateUtil.of(dataInputStream.readInt(), Month.of(dataInputStream.readInt()));
     }
 }
