@@ -53,12 +53,7 @@ public class MainConcurrency {
         }
 
         public void printLockingString() {
-            System.out.println(getLockingObject());
-
-        }
-
-        public LockObject getLockingObject() {
-            return lockingObject;
+            System.out.println(lockingObject);
         }
 
         public void setLockingObject(LockObject lockingObject) {
