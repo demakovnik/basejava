@@ -2,6 +2,8 @@ package com.urise.webapp.util;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -29,17 +31,15 @@ public class MainConcurrencyStreams {
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
         int sum = integers.stream().flatMapToInt(IntStream::of).sum();
-        return sum % 2 == 0 ? integers
-                .stream()
-                .flatMapToInt(IntStream::of)
-                .filter(num -> num % 2 != 0)
-                .boxed()
-                .collect(Collectors.toList()) :
+        return sum % 2 == 0 ? integerList(integers, value -> value % 2 != 0) :
+                integerList(integers, value -> value % 2 == 0);
+    }
 
-                integers
+    private static List<Integer> integerList(List<Integer> integers, IntPredicate predicate) {
+        return integers
                 .stream()
                 .flatMapToInt(IntStream::of)
-                .filter(num -> num % 2 == 0)
+                .filter(predicate)
                 .boxed()
                 .collect(Collectors.toList());
     }
