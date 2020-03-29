@@ -26,7 +26,7 @@ public class MainConcurrencyStreams {
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        int sum = integers.stream().flatMapToInt(IntStream::of).sum();
+        int sum = integers.stream().reduce(0, (num1, num2) -> num1 + num2);
         return integers
                 .stream()
                 .filter(num -> num % 2 != sum % 2)
