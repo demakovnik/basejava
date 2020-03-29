@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class MainConcurrencyStreams {
 
     public static void main(String[] args) {
-        int[] values = {4, 1, 2, 3, 4, 3, 2, 3, 4};
+        int[] values = {7,1,3,5,7,6,4};
         List<Integer> sourceList = Arrays.stream(values).boxed().collect(Collectors.toList());
         System.out.println(minValue(values));
         System.out.println(oddOrEven(sourceList));
@@ -21,8 +21,10 @@ public class MainConcurrencyStreams {
 
 
     private static int minValue(int[] values) {
-        return Arrays.stream(values).distinct().sorted().reduce(0, (num1, num2)
-                -> num1 * 10 + num2);
+        return Arrays.stream(values).
+                distinct().
+                sorted().
+                reduce(0, (num1, num2) -> num1 * 10 + num2);
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
