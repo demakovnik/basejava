@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class MainConcurrencyStreams {
 
     public static void main(String[] args) {
-        int[] values = {7,1,3,5,7,6,4};
+        int[] values = {1,2,3,3,2,3};
         List<Integer> sourceList = Arrays.stream(values).boxed().collect(Collectors.toList());
         System.out.println(minValue(values));
         System.out.println(oddOrEven(sourceList));
