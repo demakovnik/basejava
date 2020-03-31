@@ -22,10 +22,10 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public void runCommand(String command, SqlCommandExecutor executor) {
+    public void runCommand(String command, SqlCommandRunner runner) {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(command)) {
-            executor.execute(statement);
+            runner.run(statement);
         } catch (SQLException e) {
             if (e instanceof PSQLException) {
                 throw new ExistStorageException(e.getMessage());
