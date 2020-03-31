@@ -19,7 +19,7 @@ public class ResumeTestData {
 
 
     //Инициализация RESUME1
-    static {
+    /*static {
         RESUME1.getContacts().put(ContactType.PHONENUMBER, "+7(921) 855-0482");
         RESUME1.getContacts().put(ContactType.SKYPE, "grigory.kislin");
         RESUME1.getContacts().put(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -236,10 +236,10 @@ public class ResumeTestData {
         //**************************************************************************************************
 
 
-        /*
+        *//*
          * Добавляем секцию учебных заведений в резюме
          *
-         */
+         *//*
         RESUME1.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME1.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
@@ -486,7 +486,7 @@ public class ResumeTestData {
 
         RESUME4.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
         RESUME4.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
-    }
+    }*/
 }
 
 

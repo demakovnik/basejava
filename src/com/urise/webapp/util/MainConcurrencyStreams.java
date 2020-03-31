@@ -1,19 +1,16 @@
 package com.urise.webapp.util;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.concurrent.atomic.AtomicInteger;
+
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+
 
 public class MainConcurrencyStreams {
 
     public static void main(String[] args) {
-        int[] values = {1,2,3,3,2,3};
+        int[] values = {3,3,2,3,1};
         List<Integer> sourceList = Arrays.stream(values).boxed().collect(Collectors.toList());
         System.out.println(minValue(values));
         System.out.println(oddOrEven(sourceList));

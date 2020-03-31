@@ -19,10 +19,10 @@ public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
     private FileStorageStrategy strategy;
 
-    public PathStorage(String dir, FileStorageStrategy strategy) {
+    public PathStorage(File dir, FileStorageStrategy strategy) {
         Objects.requireNonNull(strategy, "strategy must not be null");
         this.strategy = strategy;
-        Path localpath = Paths.get(dir);
+        Path localpath = Paths.get(dir.toURI());
         if (!Files.isDirectory(localpath) || !Files.isWritable(localpath) || !Files.isReadable(localpath)) {
             throw new IllegalArgumentException(dir +
                     " is not directory or is not readable/writable");
