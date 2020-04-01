@@ -86,12 +86,12 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return sqlHelper.runCommand("SELECT FROM resumes",
+        return sqlHelper.runCommand("SELECT count(*) FROM resumes",
                 preparedStatement -> {
                     ResultSet rs = preparedStatement.executeQuery();
                     int count = 0;
-                    while (rs.next()) {
-                        count++;
+                    if (rs.next()) {
+                        count = rs.getInt(1);
                     }
                     return count;
                 });
