@@ -17,15 +17,14 @@ public class SqlHelper {
                 Config.getInstance().getDbUser(), Config.getInstance().getDbPassword());
     }
 
-    public <T> T  runCommand(String command, SqlCommandRunner<T> runner) {
+    public <T> T runCommand(String command, SqlCommandRunner<T> runner) {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(command)) {
             return runner.run(statement);
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
-                throw new ExistStorageException(command);
+                throw new ExistStorageException(e);
             }
-
             throw new StorageException(e);
         }
     }
