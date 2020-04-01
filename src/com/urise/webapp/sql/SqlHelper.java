@@ -3,7 +3,6 @@ package com.urise.webapp.sql;
 import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.StorageException;
-import org.postgresql.util.PSQLException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,18 +17,15 @@ public class SqlHelper {
                 Config.getInstance().getDbUser(), Config.getInstance().getDbPassword());
     }
 
-    public SqlHelper(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
-    }
-
-    public void runCommand(String command, SqlCommandRunner runner) {
+    public <T> T  runCommand(String command, SqlCommandRunner<T> runner) {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(command)) {
-            runner.run(statement);
+            return runner.run(statement);
         } catch (SQLException e) {
-            if (e instanceof PSQLException) {
-                throw new ExistStorageException(e.getMessage());
+            if (e.getSQLState().equals("23505")) {
+                throw new ExistStorageException(command);
             }
+
             throw new StorageException(e);
         }
     }

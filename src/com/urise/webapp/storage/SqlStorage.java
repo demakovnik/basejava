@@ -6,11 +6,7 @@ import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 public class SqlStorage implements Storage {
 
@@ -18,34 +14,35 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.runCommand("DELETE FROM resumes", PreparedStatement::execute);
+        sqlHelper.runCommand("DELETE FROM resumes", preparedStatement -> {
+            preparedStatement.execute();
+            return null;
+        });
     }
 
     @Override
     public Resume get(String uuid) {
-        AtomicReference<Resume> resume = new AtomicReference<>();
-        sqlHelper.runCommand("SELECT * FROM resumes WHERE uuid=?", preparedStatement -> {
+        return sqlHelper.runCommand("SELECT * FROM resumes WHERE uuid=?", preparedStatement -> {
             preparedStatement.setString(1, uuid);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            resume.set(new Resume(resultSet.getString("uuid"), resultSet.getString("full_name")));
+            return new Resume(resultSet.getString("uuid"), resultSet.getString("full_name"));
         });
-        return resume.get();
     }
 
     @Override
     public void update(Resume resume) {
-        sqlHelper.runCommand("UPDATE resumes SET uuid = ?, full_name = ? WHERE uuid = ?",
+        sqlHelper.runCommand("UPDATE resumes SET full_name = ? WHERE uuid = ?",
                 preparedStatement -> {
-                    preparedStatement.setString(1, resume.getUuid());
-                    preparedStatement.setString(2, resume.getFullName());
-                    preparedStatement.setString(3, resume.getUuid());
+                    preparedStatement.setString(1, resume.getFullName());
+                    preparedStatement.setString(2, resume.getUuid());
                     int result = preparedStatement.executeUpdate();
                     if (result == 0) {
                         throw new NotExistStorageException(resume.getUuid());
                     }
+                    return null;
                 });
     }
 
@@ -58,6 +55,7 @@ public class SqlStorage implements Storage {
                     if (result == 0) {
                         throw new NotExistStorageException(uuid);
                     }
+                    return null;
                 });
     }
 
@@ -68,33 +66,34 @@ public class SqlStorage implements Storage {
                     preparedStatement.setString(1, resume.getUuid());
                     preparedStatement.setString(2, resume.getFullName());
                     preparedStatement.execute();
+                    return null;
                 });
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>();
-        sqlHelper.runCommand("SELECT * FROM resumes",
+
+        return sqlHelper.runCommand("SELECT * FROM resumes ORDER BY full_name, uuid",
                 preparedStatement -> {
+                    List<Resume> result = new ArrayList<>();
                     ResultSet resultSet = preparedStatement.executeQuery();
                     while (resultSet.next()) {
                         result.add(new Resume(resultSet.getString("uuid"), resultSet.getString("full_name")));
                     }
+                    return result;
                 });
-        return result.stream().sorted(Comparator.comparing(Resume::getFullName)
-                .thenComparing(Resume::getFullName)).collect(Collectors.toList());
     }
 
     @Override
     public int size() {
-        AtomicInteger count = new AtomicInteger();
-        sqlHelper.runCommand("SELECT FROM resumes",
+        return sqlHelper.runCommand("SELECT FROM resumes",
                 preparedStatement -> {
                     ResultSet rs = preparedStatement.executeQuery();
+                    int count = 0;
                     while (rs.next()) {
-                        count.getAndIncrement();
+                        count++;
                     }
+                    return count;
                 });
-        return count.get();
     }
 }
