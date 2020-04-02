@@ -4,17 +4,20 @@ import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.StorageException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+
 
 public class SqlHelper {
     private final ConnectionFactory connectionFactory;
+    private String databaseName;
 
-    public SqlHelper () {
-        connectionFactory = () -> DriverManager.getConnection(Config.getInstance().getDbUrl(),
-                Config.getInstance().getDbUser(), Config.getInstance().getDbPassword());
+    public SqlHelper() {
+        connectionFactory = () -> {
+            Connection connection = DriverManager.getConnection(Config.getInstance().getDbUrl(),
+                    Config.getInstance().getDbUser(), Config.getInstance().getDbPassword());
+            databaseName = connection.getMetaData().getDatabaseProductName();
+            return connection;
+        };
     }
 
     public <T> T runCommand(String command, SqlCommandRunner<T> runner) {
@@ -22,7 +25,16 @@ public class SqlHelper {
              PreparedStatement statement = connection.prepareStatement(command)) {
             return runner.run(statement);
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")) {
+            int errorCode = -1;
+            switch (databaseName) {
+                case "PostgreSQL":
+                    errorCode = 0;
+                    break;
+                case "SQLite":
+                    errorCode = 19;
+                    break;
+            }
+            if (e.getErrorCode() == errorCode) {
                 throw new ExistStorageException(e);
             }
             throw new StorageException(e);
