@@ -19,7 +19,7 @@ public class ResumeTestData {
 
 
     //Инициализация RESUME1
-    /*static {
+    static {
         RESUME1.getContacts().put(ContactType.PHONENUMBER, "+7(921) 855-0482");
         RESUME1.getContacts().put(ContactType.SKYPE, "grigory.kislin");
         RESUME1.getContacts().put(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -27,7 +27,7 @@ public class ResumeTestData {
         RESUME1.getContacts().put(ContactType.GITHUB, "https://github.com/gkislin");
         RESUME1.getContacts().put(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         RESUME1.getContacts().put(ContactType.HOMEPAGE, "http://gkislin.ru/");
-        RESUME1.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
+        /*RESUME1.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         RESUME1.getSections().put(SectionType.PERSONAL, new PersonalOrObjectiveSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
         List<String> achievements = new ArrayList<>();
         achievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", " +
@@ -236,14 +236,14 @@ public class ResumeTestData {
         //**************************************************************************************************
 
 
-        *//*
+        /*
          * Добавляем секцию учебных заведений в резюме
          *
          *//*
         RESUME1.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME1.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
-        RESUME1.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
+        RESUME1.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));*/
     }
 
 
@@ -252,7 +252,7 @@ public class ResumeTestData {
         RESUME2.getContacts().put(ContactType.PHONENUMBER, "+0(000) 000-0000");
         RESUME2.getContacts().put(ContactType.SKYPE, "hello.world");
         RESUME2.getContacts().put(ContactType.EMAIL, "helloworld@yandex.ru");
-        RESUME2.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Супер-пупер сотрудник"));
+        /*RESUME2.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Супер-пупер сотрудник"));
         RESUME2.getSections().put(SectionType.PERSONAL, new PersonalOrObjectiveSection("Очень крутой спец"));
         List<String> achievements = new ArrayList<>();
         achievements.add("В 2018 делал то");
@@ -292,7 +292,7 @@ public class ResumeTestData {
         RESUME2.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME2.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
-        RESUME2.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
+        RESUME2.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));*/
     }
 
     //Инициализация RESUME3
@@ -300,7 +300,7 @@ public class ResumeTestData {
         RESUME3.getContacts().put(ContactType.PHONENUMBER, "+1(111) 111-1111");
         RESUME3.getContacts().put(ContactType.SKYPE, "hello.world");
         RESUME3.getContacts().put(ContactType.EMAIL, "helloworld@yandex.ru");
-        RESUME3.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Отличный сотрудник"));
+        /*RESUME3.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Отличный сотрудник"));
         RESUME3.getSections().put(SectionType.PERSONAL, new PersonalOrObjectiveSection("Очень хороший спец"));
         List<String> achievements = new ArrayList<>();
         achievements.add("В 2017 делал то");
@@ -341,7 +341,7 @@ public class ResumeTestData {
         RESUME3.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME3.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
-        RESUME3.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
+        RESUME3.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));*/
     }
 
     //Инициализация RESUME4
@@ -351,7 +351,7 @@ public class ResumeTestData {
         RESUME4.getContacts().put(ContactType.EMAIL, "medved@preved.ru");
         RESUME4.getContacts().put(ContactType.LINKEDIN, "https://www.linkedin.com/in/prevedmedved");
         RESUME4.getContacts().put(ContactType.GITHUB, "https://github.com/prevedmedved");
-        RESUME4.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Инженер-программист"));
+        /*RESUME4.getSections().put(SectionType.OBJECTIVE, new PersonalOrObjectiveSection("Инженер-программист"));
         RESUME4.getSections().put(SectionType.PERSONAL, new PersonalOrObjectiveSection("Аналитический склад ума."));
         List<String> achievements = new ArrayList<>();
         achievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", " +
@@ -485,8 +485,8 @@ public class ResumeTestData {
         RESUME4.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME4.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
-        RESUME4.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));
-    }*/
+        RESUME4.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));*/
+    }
 }
 
 

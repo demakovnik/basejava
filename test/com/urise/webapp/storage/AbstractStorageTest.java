@@ -1,6 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
@@ -8,15 +7,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    protected static final String DBURL = Config.getInstance().getDbUrl();
-    protected static final String DBUSER = Config.getInstance().getDbUser();
-    protected static final String DBPASSWORD = Config.getInstance().getDbPassword();
+
     protected final Storage storage;
 
     private final static Resume RESUME_1 = ResumeTestData.RESUME1;
