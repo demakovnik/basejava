@@ -1,11 +1,16 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.Config;
-import com.urise.webapp.fileoperator.ObjectToByteStreamOperator;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 public class SqlStorageTest extends AbstractStorageTest {
 
     public SqlStorageTest() {
         super(new SqlStorage());
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 }
