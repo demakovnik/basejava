@@ -1,10 +1,11 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.Config;
+import java.io.IOException;
 
 public class SqlStorageTest extends AbstractStorageTest {
 
-    public SqlStorageTest() {
+    public SqlStorageTest() throws IOException {
         super(new SqlStorage());
+
     }
 }
