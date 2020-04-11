@@ -18,7 +18,6 @@ import java.util.Properties;
 public class Config {
     private static final File PROPS = new File( System.getProperty("basedir"),"config\\resumes.properties");
     private static final Config INSTANCE = new Config();
-    public static File file = new File(".");
 
     private final File storageDir;
     private final Storage storage;
