@@ -16,4 +16,15 @@ create table contacts
 create unique index contact_uuid_type_index
     on contacts (resume_uuid, type);
 
+create table sections
+(
+    id          serial,
+    resume_uuid char(36) not null references resumes (uuid) on DELETE cascade,
+    type        text     not null,
+    value       text     not null
+);
+
+create unique index section_uuid_type_index
+    on sections (resume_uuid, type);
+
 

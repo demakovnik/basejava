@@ -10,11 +10,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SqlHelper {
+
     private final ConnectionFactory connectionFactory;
 
     public SqlHelper() {
         connectionFactory = () -> DriverManager.getConnection(Config.getInstance().getDbUrl(),
-                Config.getInstance().getDbUser(), Config.getInstance().getDbPassword());
+                Config.getInstance().getDbUser(),Config.getInstance().getDbPassword());
     }
 
     public void runCommand(String command) {
