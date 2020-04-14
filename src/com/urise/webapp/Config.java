@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-    private static final File PROPS = new File( System.getProperty("basedir"),"config\\resumes.properties");
+    private static final File PROPS = new File(getBaseDir() ,"config/resumes.properties");
     private static final Config INSTANCE = new Config();
 
     private final File storageDir;
@@ -43,6 +43,14 @@ public class Config {
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }
+    }
+
+    public static String getBaseDir() {
+        String basedir = System.getProperty("basedir");
+        if (basedir == null) {
+            basedir = ".";
+        }
+        return basedir;
     }
 
     public File getStorageDir() {

@@ -20,11 +20,8 @@ public class SqlStorage implements Storage {
         sqlHelper = new SqlHelper();
     }
 
-
-
     @Override
     public void clear() {
-
         sqlHelper.runCommand("DELETE FROM resumes");
     }
 
@@ -140,11 +137,8 @@ public class SqlStorage implements Storage {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        StringBuilder sb = new StringBuilder();
-                        ((AchievementOrQualificationsSection) c.getValue())
-                                .getListOfAchievementsOrQualifications()
-                                .forEach((s) -> sb.append(s).append("\n"));
-                        value = sb.toString();
+                        value = String.join("\n", ((AchievementOrQualificationsSection) c.getValue())
+                                .getListOfAchievementsOrQualifications());
                         break;
                 }
                 preparedStatement.setString(1, resume.getUuid());
@@ -156,19 +150,19 @@ public class SqlStorage implements Storage {
         }
     }
 
-
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.transactionalExecute(connection -> {
-            LinkedHashMap<String, Resume> resumeMap = new LinkedHashMap();
+            HashMap<String, Resume> resumeMap = new LinkedHashMap();
 
-            insertItemToResume(connection, "SELECT * FROM resumes", rs -> {
+            insertItemToResume(connection, "SELECT * FROM resumes ORDER BY (full_name,uuid)", rs -> {
                 String uuid = rs.getString("uuid");
                 resumeMap.putIfAbsent(uuid, new Resume(uuid, rs.getString("full_name")));
             });
 
-            insertItemToResume(connection, "SELECT * FROM contacts", rs ->
-                    insertContactIntoResume(rs, resumeMap.get(rs.getString("resume_uuid"))));
+            insertItemToResume(connection, "SELECT * FROM contacts", rs -> {
+                insertContactIntoResume(rs, resumeMap.get(rs.getString("resume_uuid")));
+            });
 
             insertItemToResume(connection, "SELECT * FROM sections", rs ->
                     insertSectionIntoResume(rs, resumeMap.get(rs.getString("resume_uuid"))));
