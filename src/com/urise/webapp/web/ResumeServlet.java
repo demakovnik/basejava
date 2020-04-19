@@ -37,6 +37,7 @@ public class ResumeServlet extends HttpServlet {
                 r.getContacts().remove(type);
             }
         }
+
         for (SectionType type : SectionType.values()) {
             AbstractSection value = null;
             switch (type) {
@@ -54,13 +55,10 @@ public class ResumeServlet extends HttpServlet {
                     List<Organization> organizations = Arrays.asList(request.getParameterMap().get(type.name()))
                             .stream().filter(s -> s.trim().length() >0)
                             .map((s -> new Organization(s,"",new ArrayList<Position>()))).collect(Collectors.toList());
-
-                    if (r.getSection(type) != null) {
-                        r.getSections().remove(type);
-                    }
                     value = new ExperienceOrEducationSection(organizations);
                     break;
             }
+            r.getSections().remove(type);
             if (value != null) {
                 r.putSection(type, value);
             }
