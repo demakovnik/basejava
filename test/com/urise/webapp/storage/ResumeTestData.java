@@ -68,7 +68,7 @@ public class ResumeTestData {
         qualifications.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных " +
                 "шаблонов, UML, функционального программирования");
         qualifications.add("Родной русский, английский \"upper intermediate\"");
-/*
+
         //Добавляем организации
 
         List<Organization> organizations = new ArrayList<>();
@@ -239,8 +239,8 @@ public class ResumeTestData {
         /*
          * Добавляем секцию учебных заведений в резюме
          *
-         *
-        RESUME1.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));*/
+         */
+        RESUME1.getSections().put(SectionType.EDUCATION, new ExperienceOrEducationSection(educationals));
 
         RESUME1.getSections().put(SectionType.ACHIEVEMENT, new AchievementOrQualificationsSection(achievements));
         RESUME1.getSections().put(SectionType.QUALIFICATIONS, new AchievementOrQualificationsSection(qualifications));

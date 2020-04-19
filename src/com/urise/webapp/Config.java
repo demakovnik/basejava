@@ -1,5 +1,7 @@
 package com.urise.webapp;
 
+import com.urise.webapp.fileoperator.ObjectToByteStreamOperator;
+import com.urise.webapp.storage.PathStorage;
 import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.storage.Storage;
 
