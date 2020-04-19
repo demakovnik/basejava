@@ -52,7 +52,6 @@
                 </td>
             </tr>
 
-
             <c:if test="${type.name().equals('EXPERIENCE')}">
                 <c:forEach var="organization" items="${section.getListOfExperienceOrEducation()}">
                     <tr>
@@ -73,11 +72,11 @@
                         <jsp:useBean id="position" type="com.urise.webapp.model.Position"/>
                         <tr>
                             <td>
-
-                                    <p>
+                                <dl>
+                                    <dd>
                                             ${position.title}
-                                    </p>
-                                    <p><%=position.
+                                    </dd>
+                                    <dd><%=position.
                                             getStartTime().
                                             format(DateTimeFormatter.ofPattern("MM/YYYY"))
                                     %> -
@@ -89,18 +88,17 @@
                                                         getEndTime().
                                                         format(DateTimeFormatter.
                                                                 ofPattern("MM/YYYY"))
-                                        %></p>
-
-
+                                        %>
+                                    </dd>
+                                </dl>
                             </td>
-                            <td rowspan=2>
+                            <td>
                                     ${position.description}
                             </td>
                         </tr>
                     </c:forEach>
                 </c:forEach>
             </c:if>
-
             <c:if test="${type.name().equals('EDUCATION')}">
                 <c:forEach var="organization" items="${section.getListOfExperienceOrEducation()}">
                     <tr>
@@ -119,9 +117,9 @@
                     <c:forEach var="position" items="${organization.positionList}">
                         <tr>
                             <td>
-
-                                    <p>${position.description}</p>
-                                    <p>${position.
+                                <dl>
+                                    <dd>${position.description}</dd>
+                                    <dd>${position.
                                             startTime.
                                             format(DateTimeFormatter.ofPattern("MM/YYYY"))
                                             } -
@@ -133,8 +131,8 @@
                                                             endTime.
                                                             format(DateTimeFormatter.
                                                             ofPattern("MM/YYYY"))
-                                                    }</p>
-
+                                                    }</dd>
+                                </dl>
                             </td>
                             <td>
                                     ${position.title}
@@ -145,7 +143,6 @@
             </c:if>
         </c:forEach>
     </table>
-
 </section>
 </body>
 </html>
