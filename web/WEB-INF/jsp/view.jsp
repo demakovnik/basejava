@@ -1,6 +1,3 @@
-<%@page import="com.urise.webapp.model.ContactType" %>
-<%@ page import="com.urise.webapp.model.PersonalOrObjectiveSection" %>
-<%@ page import="com.urise.webapp.model.AchievementOrQualificationsSection" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="com.urise.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
