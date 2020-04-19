@@ -23,127 +23,126 @@
     </p>
     <table>
         <c:forEach var="sectionEntry" items="${resume.sections}">
-        <jsp:useBean id="sectionEntry"
-                     type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.AbstractSection>"/>
-        <c:set var="type" value="${sectionEntry.key}"/>
-        <c:set var="section" value="${sectionEntry.value}"/>
-        <tr>
-            <td colspan=2><h2>${type.title}</h2></td>
-        </tr>
+            <jsp:useBean id="sectionEntry"
+                         type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.AbstractSection>"/>
+            <c:set var="type" value="${sectionEntry.key}"/>
+            <c:set var="section" value="${sectionEntry.value}"/>
+            <tr>
+                <td colspan=2><h2>${type.title}</h2></td>
+            </tr>
 
-        <tr>
-            <td colspan=2>
-                <c:if test="${type.name().equals('PERSONAL') || type.name().equals('OBJECTIVE')}">
-                    ${section.getText()}
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td colspan=2>
-                <c:if test="${type.name().equals('ACHIEVEMENT') || type.name().equals('QUALIFICATIONS')}">
-                    <ul>
-                        <c:forEach var="string" items="${section.getListOfAchievementsOrQualifications()}">
-                            <jsp:useBean id="string" type="java.lang.String"/>
-                            <li><%=string%>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </c:if>
-            </td>
-        </tr>
+            <tr>
+                <td colspan=2>
+                    <c:if test="${type.name().equals('PERSONAL') || type.name().equals('OBJECTIVE')}">
+                        ${section.getText()}
+                    </c:if>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <c:if test="${type.name().equals('ACHIEVEMENT') || type.name().equals('QUALIFICATIONS')}">
+                        <ul>
+                            <c:forEach var="string" items="${section.getListOfAchievementsOrQualifications()}">
+                                <jsp:useBean id="string" type="java.lang.String"/>
+                                <li><%=string%>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
+                </td>
+            </tr>
 
 
-        <c:if test="${type.name().equals('EXPERIENCE')}">
-            <c:forEach var="organization" items="${section.getListOfExperienceOrEducation()}">
-                <tr>
-                    <jsp:useBean id="organization" type="com.urise.webapp.model.Organization"/>
-                    <td>
-                        <h4><c:choose>
-                            <c:when test="${organization.link.url==null}">
-                                <%=organization.getLink().getTitle()%>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="${organization.link.url}"><%=organization.getLink().getTitle()%>
-                                </a>
-                            </c:otherwise>
-                        </c:choose></h4>
-                    </td>
-                </tr>
-                <c:forEach var="position" items="${organization.positionList}">
-                    <jsp:useBean id="position" type="com.urise.webapp.model.Position"/>
+            <c:if test="${type.name().equals('EXPERIENCE')}">
+                <c:forEach var="organization" items="${section.getListOfExperienceOrEducation()}">
                     <tr>
+                        <jsp:useBean id="organization" type="com.urise.webapp.model.Organization"/>
                         <td>
-                                ${position.title}
-                        </td>
-                        <td rowspan=2>
-                                ${position.description}
+                            <h4><c:choose>
+                                <c:when test="${organization.link.url==null}">
+                                    <%=organization.getLink().getTitle()%>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${organization.link.url}"><%=organization.getLink().getTitle()%>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose></h4>
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <%=position.
-                                    getStartTime().
-                                    format(DateTimeFormatter.ofPattern("MM/YYYY"))
-                            %> -
-                            <%=position.
-                                    getEndTime().
-                                    equals(DateUtil.NOW) ?
-                                    "по настоящее время" :
-                                    position.
-                                            getEndTime().
-                                            format(DateTimeFormatter.
-                                                    ofPattern("MM/YYYY"))
-                            %>
-                        </td>
-                    </tr>
+                    <c:forEach var="position" items="${organization.positionList}">
+                        <jsp:useBean id="position" type="com.urise.webapp.model.Position"/>
+                        <tr>
+                            <td>
+
+                                    <p>
+                                            ${position.title}
+                                    </p>
+                                    <p><%=position.
+                                            getStartTime().
+                                            format(DateTimeFormatter.ofPattern("MM/YYYY"))
+                                    %> -
+                                        <%=position.
+                                                getEndTime().
+                                                equals(DateUtil.NOW) ?
+                                                "по настоящее время" :
+                                                position.
+                                                        getEndTime().
+                                                        format(DateTimeFormatter.
+                                                                ofPattern("MM/YYYY"))
+                                        %></p>
+
+
+                            </td>
+                            <td rowspan=2>
+                                    ${position.description}
+                            </td>
+                        </tr>
+                    </c:forEach>
                 </c:forEach>
-            </c:forEach>
-        </c:if>
+            </c:if>
 
-        <c:if test="${type.name().equals('EDUCATION')}">
-            <c:forEach var="organization" items="${section.getListOfExperienceOrEducation()}">
-                <tr>
-                    <td>
-                        <c:choose>
-                            <c:when test="${organization.link.url==null}">
-                                ${organization.link.title}
-                            </c:when>
-                            <c:otherwise>
-                                <a href="${organization.link.url}">${organization.link.title}
-                                </a>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                </tr>
-                <c:forEach var="position" items="${organization.positionList}">
+            <c:if test="${type.name().equals('EDUCATION')}">
+                <c:forEach var="organization" items="${section.getListOfExperienceOrEducation()}">
                     <tr>
                         <td>
-                                ${position.description}
-                        </td>
-                        <td rowspan=2>
-                                ${position.title}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            ${position.
-                                    startTime.
-                                    format(DateTimeFormatter.ofPattern("MM/YYYY"))
-                            } -
-                            ${position.
-                                    endTime.
-                                    equals(DateUtil.NOW) ?
-                                    "по настоящее время" :
-                                    position.
-                                            endTime.
-                                            format(DateTimeFormatter.
-                                                    ofPattern("MM/YYYY"))
-                            }
+                            <h4><c:choose>
+                                <c:when test="${organization.link.url==null}">
+                                    ${organization.link.title}
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${organization.link.url}">${organization.link.title}
+                                    </a>
+                                </c:otherwise>
+                            </c:choose></h4>
                         </td>
                     </tr>
+                    <c:forEach var="position" items="${organization.positionList}">
+                        <tr>
+                            <td>
+
+                                    <p>${position.description}</p>
+                                    <p>${position.
+                                            startTime.
+                                            format(DateTimeFormatter.ofPattern("MM/YYYY"))
+                                            } -
+                                            ${position.
+                                                    endTime.
+                                                    equals(DateUtil.NOW) ?
+                                                    "по настоящее время" :
+                                                    position.
+                                                            endTime.
+                                                            format(DateTimeFormatter.
+                                                            ofPattern("MM/YYYY"))
+                                                    }</p>
+
+                            </td>
+                            <td>
+                                    ${position.title}
+                            </td>
+                        </tr>
+                    </c:forEach>
                 </c:forEach>
-            </c:forEach>
-        </c:if>
+            </c:if>
         </c:forEach>
     </table>
 
