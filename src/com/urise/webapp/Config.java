@@ -42,7 +42,7 @@ public class Config {
             dbUrl = props.getProperty("db.url");
             dbUser = props.getProperty("db.user");
             dbPassword = props.getProperty("db.password");
-            storage = new PathStorage(storageDir, new ObjectToByteStreamOperator());
+            storage = new SqlStorage();
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }
