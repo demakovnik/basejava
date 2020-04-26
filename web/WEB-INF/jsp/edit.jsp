@@ -1,4 +1,5 @@
 <%@ page import="com.urise.webapp.model.*" %>
+<%@ page import="com.urise.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -33,34 +34,64 @@
             <c:forEach var="type" items="<%=SectionType.values()%>">
                 <c:set var="section" value="${resume.getSection(type)}"/>
                 <jsp:useBean id="section" type="com.urise.webapp.model.AbstractSection"/>
-        <h3>${type.title}</h3>
-        <c:choose>
-            <c:when test="${type.name().equals('PERSONAL') || type.name().equals('OBJECTIVE')}">
-                <textarea name="${type.name()}" cols=100
-                          rows=4><%=((PersonalOrObjectiveSection) section).getText()%></textarea>
-            </c:when>
 
-            <c:when test="${type.name().equals('ACHIEVEMENT') || type.name().equals('QUALIFICATIONS')}">
-                <textarea name="${type.name()}" cols=100
-                          rows=4><%=String.join("\n", ((AchievementOrQualificationsSection) section).
-                        getListOfAchievementsOrQualifications())%>
+            <c:choose>
+            <c:when test="${type.name().equals('PERSONAL') || type.name().equals('OBJECTIVE')}">
+        <h3>${type.title}</h3>
+        <textarea name="${type.name()}" cols=100
+                  rows=4><%=((PersonalOrObjectiveSection) section).getText()%></textarea>
+        </c:when>
+
+        <c:when test="${type.name().equals('ACHIEVEMENT') || type.name().equals('QUALIFICATIONS')}">
+            <h3>${type.title}</h3>
+            <textarea name="${type.name()}" cols=100
+                      rows=4><%=String.join("\n", ((AchievementOrQualificationsSection) section).
+                    getListOfAchievementsOrQualifications())%>
                 </textarea>
-            </c:when>
-            <c:when test="${type.name().equals('EXPERIENCE') || type.name().equals('EDUCATION')}">
+
+        </c:when>
+        <c:when test="${type.name().equals('EXPERIENCE') || type.name().equals('EDUCATION')}">
+            <c:if test="<%=!((ExperienceOrEducationSection) section).getListOfExperienceOrEducation().isEmpty()%>">
+                <h3>${type.title}</h3>
                 <c:forEach var="organization"
                            items="<%=((ExperienceOrEducationSection) section).getListOfExperienceOrEducation()%>"
-                           varStatus="counter">
+                           varStatus="orgCounter">
                     <jsp:useBean id="organization" type="com.urise.webapp.model.Organization"/>
-                    <p>Наименование организации ${counter.index+1}
-                    <input type="text" name=${type} size=30 value="${organization.link.title}"></p>
+                    <p>Наименование организации:
+                        <textarea name="${type.name()}" cols=50 rows=3>${organization.link.title}</textarea>
+                    <p>Веб-сайт организации:
+                        <input type="text" name=${type.name()}_url size=50
+                               value="${organization.link.url}"></p>
+                    <c:forEach var="position"
+                               items="<%=organization.getPositionList()%>" varStatus="posCounter">
+                        <p>
+                        <h4>Позиция ${posCounter.index+1}</h4>
+                        <p>Должность:
+                            <input type="text" name=${type.name()}_posTitle_${orgCounter.index} size=50
+                                   value="${position.title.trim()}"></p>
+                        <p>Описание:
+                            <textarea name="${type.name()}_posDesc_${orgCounter.index}" cols=50
+                                      rows=3>${position.description.trim()}</textarea>
+                        <h5>Период работы:</h5>
+                        <p>с:
+                            <input type="text" name=${type.name()}_posStartTime_${orgCounter.index} size=15
+                                   value="${DateUtil.localDateToText(position.startTime)}"><br/>
+                            по:
+                            <input type="text" name=${type.name()}_posEndTime_${orgCounter.index} size=15
+                                   value="${DateUtil.localDateToText(position.endTime)}"><br/>
+                        </p>
+                        </p>
+                    </c:forEach>
                 </c:forEach>
-            </c:when>
+            </c:if>
+
+        </c:when>
         </c:choose>
         </c:forEach>
         </p>
 
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

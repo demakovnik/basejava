@@ -38,4 +38,8 @@ public class PersonalOrObjectiveSection extends AbstractSection {
                 "text='" + text + '\'' +
                 '}';
     }
+
+    public boolean isEmpty() {
+        return text.trim().isEmpty();
+    }
 }

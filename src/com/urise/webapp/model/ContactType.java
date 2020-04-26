@@ -14,10 +14,31 @@ public enum ContactType {
             return "<a href='mailto:" + value + "'>" + value + "</a>";
         }
     },
-    LINKEDIN("Профиль LinkedIn"),
-    GITHUB("Профиль GitHub"),
-    STACKOVERFLOW("Профиль StackOverflow"),
-    HOMEPAGE("Домашняя страница");
+    LINKEDIN("Профиль LinkedIn") {
+        @Override
+        public String toHtml0(String value) {
+            return "<a href='" + value + "'>" + value + "</a>";
+        }
+    },
+    GITHUB("Профиль GitHub") {
+        @Override
+        public String toHtml0(String value) {
+            return "<a href='" + value + "'>" + value + "</a>";
+        }
+    },
+
+    STACKOVERFLOW("Профиль StackOverflow") {
+        @Override
+        public String toHtml0(String value) {
+            return "<a href='" + value + "'>" + value + "</a>";
+        }
+    },
+    HOMEPAGE("Домашняя страница") {
+        @Override
+        public String toHtml0(String value) {
+            return "<a href='" + value + "'>" + value + "</a>";
+        }
+    };
 
     private String title;
 
@@ -30,7 +51,7 @@ public enum ContactType {
     }
 
     protected String toHtml0(String value) {
-        return title + ": " + value;
+        return value;
     }
 
     public String toHtml(String value) {

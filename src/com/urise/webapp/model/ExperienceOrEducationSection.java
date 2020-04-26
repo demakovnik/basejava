@@ -40,4 +40,8 @@ public class ExperienceOrEducationSection extends AbstractSection {
                 "listOfExperienceOrEducation=" + listOfExperienceOrEducation +
                 '}';
     }
+
+    public boolean isEmpty() {
+        return listOfExperienceOrEducation.isEmpty();
+    }
 }

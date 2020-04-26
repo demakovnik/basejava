@@ -1,6 +1,7 @@
 package com.urise.webapp;
 
 import com.urise.webapp.fileoperator.ObjectToByteStreamOperator;
+import com.urise.webapp.storage.FileStorage;
 import com.urise.webapp.storage.PathStorage;
 import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.storage.Storage;
@@ -41,7 +42,7 @@ public class Config {
             dbUrl = props.getProperty("db.url");
             dbUser = props.getProperty("db.user");
             dbPassword = props.getProperty("db.password");
-            storage = new SqlStorage();
+            storage = new PathStorage(storageDir, new ObjectToByteStreamOperator());
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }

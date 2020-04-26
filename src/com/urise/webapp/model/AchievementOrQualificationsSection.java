@@ -40,5 +40,10 @@ public class AchievementOrQualificationsSection extends AbstractSection {
                 "listOfAchievementsOrQualifications=" + listOfAchievementsOrQualifications +
                 '}';
     }
+
+    public boolean isEmpty() {
+        return listOfAchievementsOrQualifications.isEmpty();
+    }
+
 }
 

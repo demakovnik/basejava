@@ -1,4 +1,3 @@
-<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="com.urise.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -15,10 +14,11 @@
 <section>
     <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit">Edit</a></h2>
     <p>
+    <h3>Контакты</h3>
         <c:forEach var="contactEntry" items="${resume.contacts}">
             <jsp:useBean id="contactEntry"
                          type="java.util.Map.Entry<com.urise.webapp.model.ContactType, java.lang.String>"/>
-            <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
+            <%=contactEntry.getKey().getTitle() + ":" + contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     </p>
     <table>
@@ -43,9 +43,7 @@
                     <c:if test="${type.name().equals('ACHIEVEMENT') || type.name().equals('QUALIFICATIONS')}">
                         <ul>
                             <c:forEach var="string" items="${section.getListOfAchievementsOrQualifications()}">
-                                <jsp:useBean id="string" type="java.lang.String"/>
-                                <li><%=string%>
-                                </li>
+                                <li>${string}</li>
                             </c:forEach>
                         </ul>
                     </c:if>
@@ -58,7 +56,7 @@
                         <jsp:useBean id="organization" type="com.urise.webapp.model.Organization"/>
                         <td>
                             <h4><c:choose>
-                                <c:when test="${organization.link.url==null}">
+                                <c:when test="<%=organization.getLink().getUrl().isEmpty()%>">
                                     <%=organization.getLink().getTitle()%>
                                 </c:when>
                                 <c:otherwise>
@@ -76,18 +74,12 @@
                                     <dd>
                                             ${position.title}
                                     </dd>
-                                    <dd><%=position.
-                                            getStartTime().
-                                            format(DateTimeFormatter.ofPattern("MM/YYYY"))
+                                    <dd><%=DateUtil.localDateToText(position.
+                                            getStartTime())
+
                                     %> -
-                                        <%=position.
-                                                getEndTime().
-                                                equals(DateUtil.NOW) ?
-                                                "по настоящее время" :
-                                                position.
-                                                        getEndTime().
-                                                        format(DateTimeFormatter.
-                                                                ofPattern("MM/YYYY"))
+                                        <%=DateUtil.localDateToText(position.
+                                                getEndTime())
                                         %>
                                     </dd>
                                 </dl>
@@ -119,18 +111,11 @@
                             <td>
                                 <dl>
                                     <dd>${position.description}</dd>
-                                    <dd>${position.
-                                            startTime.
-                                            format(DateTimeFormatter.ofPattern("MM/YYYY"))
+                                    <dd>${DateUtil.localDateToText(position.
+                                            startTime)
                                             } -
-                                            ${position.
-                                                    endTime.
-                                                    equals(DateUtil.NOW) ?
-                                                    "по настоящее время" :
-                                                    position.
-                                                            endTime.
-                                                            format(DateTimeFormatter.
-                                                            ofPattern("MM/YYYY"))
+                                            ${DateUtil.localDateToText(position.
+                                                    endTime)
                                                     }</dd>
                                 </dl>
                             </td>

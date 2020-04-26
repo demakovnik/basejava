@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -23,12 +23,18 @@ public class ResumeServlet extends HttpServlet {
         storage = Config.getInstance().getStorage();
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
-        r.setFullName(fullName);
+        Resume r;
+        boolean isEmptyUuid = uuid.isEmpty();
+        if (isEmptyUuid) {
+            r = new Resume(fullName);
+        } else {
+            r = storage.get(uuid);
+            r.setFullName(fullName);
+        }
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -43,29 +49,74 @@ public class ResumeServlet extends HttpServlet {
             switch (type) {
                 case PERSONAL:
                 case OBJECTIVE:
-                    value = new PersonalOrObjectiveSection(request.getParameter(type.name()));
+                    String text = request.getParameter(type.name());
+                    if (text.isEmpty()) {
+                        r.getSections().remove(type);
+                        break;
+                    }
+                    value = new PersonalOrObjectiveSection(text);
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATIONS:
-
-                    value = new AchievementOrQualificationsSection(Arrays.asList(request.getParameter(type.name()).trim().split("\n")));
+                    String strings = request.getParameter(type.name()).trim();
+                    if (strings.isEmpty()) {
+                        r.getSections().remove(type);
+                        break;
+                    }
+                    List<String> list = Arrays.asList(strings.split("\n"));
+                    value = new AchievementOrQualificationsSection(list);
+                    if (value.isEmpty()) {
+                        r.getSections().remove(type);
+                    }
                     break;
                 case EDUCATION:
                 case EXPERIENCE:
-                    List<Organization> organizations = Arrays.asList(request.getParameterMap().get(type.name()))
-                            .stream().filter(s -> s.trim().length() >0)
-                            .map((s -> new Organization(s,"",new ArrayList<Position>()))).collect(Collectors.toList());
+                    List<Organization> organizations = new ArrayList<>();
+                    String[] orgTitles = request.getParameterValues(type.name());
+                    if (orgTitles == null || orgTitles[0].isEmpty()) {
+                        r.getSections().remove(type);
+                        break;
+                    }
+                    String[] orgUrls = request.getParameterValues(type.name() + "_url");
+                    for (int i = 0; i < orgTitles.length; i++) {
+                        if (orgTitles[i].trim().length() == 0) {
+                            continue;
+                        }
+                        List<Position> positions = new ArrayList<>();
+                        Link link = new Link(orgTitles[i], orgUrls[i]);
+                        String[] posTitles = request.getParameterValues(type.name() + "_posTitle_" + i);
+                        String[] posDescriptions = request.getParameterValues(type.name() + "_posDesc_" + i);
+                        String[] startTimes = request.getParameterValues(type.name() + "_posStartTime_" + i);
+                        String[] endTimes = request.getParameterValues(type.name() + "_posEndTime_" + i);
+                        for (int j = 0; j < posTitles.length; j++) {
+                            String positionTitle = posTitles[j];
+                            if (positionTitle.trim().length() == 0) {
+                                continue;
+                            }
+                            String positionDescription = posDescriptions[j];
+                            LocalDate startTime = DateUtil.stringToLocalDate(startTimes[j]);
+                            LocalDate endTime = DateUtil.stringToLocalDate(endTimes[j]);
+                            positions.add(new Position(positionTitle, startTime, endTime, positionDescription));
+                        }
+                        if (!positions.isEmpty()) {
+                            organizations.add(new Organization(link, positions));
+                        } else organizations.clear();
+                    }
                     value = new ExperienceOrEducationSection(organizations);
                     break;
             }
-            r.getSections().remove(type);
             if (value != null) {
                 r.putSection(type, value);
             }
         }
-        storage.update(r);
+        if (!isEmptyUuid) {
+            storage.update(r);
+        } else {
+            storage.save(r);
+        }
         response.sendRedirect("resume");
     }
+
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
@@ -82,33 +133,15 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             case "view":
+                r = storage.get(uuid);
+                break;
             case "edit":
                 r = storage.get(uuid);
-                for (SectionType type : SectionType.values()) {
-                    AbstractSection value = r.getSection(type);
-                    if (value == null) {
-                        switch (type) {
-                            case PERSONAL:
-                            case OBJECTIVE:
-                                value = new PersonalOrObjectiveSection("");
-                                break;
-                            case ACHIEVEMENT:
-                            case QUALIFICATIONS:
-                                value = new AchievementOrQualificationsSection(new ArrayList<String>());
-                                break;
-                            case EXPERIENCE:
-                            case EDUCATION:
-                                Position emptyPos = new Position("", DateUtil.NOW,DateUtil.NOW,"");
-                                List<Position> positionList = new ArrayList<>();
-                                positionList.add(emptyPos);
-                                Organization emptyOrg = new Organization("","",positionList);
-                                List<Organization> organizations = new ArrayList<>();
-                                organizations.add(emptyOrg);
-                                value = new ExperienceOrEducationSection(organizations);
-                        }
-                        r.putSection(type, value);
-                    }
-                }
+                addDataToResume(r);
+                break;
+            case "add":
+                r = new Resume("","");
+                addDataToResume(r);
                 break;
             default:
                 throw new IllegalStateException("Action " + action + " is illegal");
@@ -117,5 +150,34 @@ public class ResumeServlet extends HttpServlet {
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
+    }
+
+    private void addDataToResume(Resume resume) {
+        for (SectionType type : SectionType.values()) {
+            AbstractSection value = resume.getSection(type);
+            if (value == null) {
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        value = new PersonalOrObjectiveSection("");
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        value = new AchievementOrQualificationsSection(new ArrayList<>());
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        Position emptyPos = new Position("", DateUtil.NOW, DateUtil.NOW, "");
+                        List<Position> positionList = new ArrayList<>();
+                        positionList.add(emptyPos);
+                        Organization emptyOrg = new Organization("", "", positionList);
+                        List<Organization> organizations = new ArrayList<>();
+                        organizations.add(emptyOrg);
+                        value = new ExperienceOrEducationSection(organizations);
+                }
+                resume.putSection(type, value);
+            }
+
+        }
     }
 }
