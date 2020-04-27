@@ -44,7 +44,7 @@ public class SqlStorage implements Storage {
                 preparedStatement.setString(1, uuid);
                 resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    insertContactIntoResume(resultSet, resume);
+                    insertContactToResumeFromDB(resultSet, resume);
                 }
             }
 
@@ -150,21 +150,21 @@ public class SqlStorage implements Storage {
         return sqlHelper.transactionalExecute(connection -> {
             LinkedHashMap<String, Resume> resumeMap = new LinkedHashMap<>();
 
-            insertItemToResume(connection, "SELECT * FROM resumes", rs -> {
+            insertItemToResumeFromDB(connection, "SELECT * FROM resumes ORDER by (full_name,uuid)", rs -> {
                 String uuid = rs.getString("uuid");
                 resumeMap.putIfAbsent(uuid, new Resume(uuid, rs.getString("full_name")));
             });
 
-            insertItemToResume(connection, "SELECT * FROM contacts", rs ->
-                    insertContactIntoResume(rs, resumeMap.get(rs.getString("resume_uuid"))));
+            insertItemToResumeFromDB(connection, "SELECT * FROM contacts", rs ->
+                    insertContactToResumeFromDB(rs, resumeMap.get(rs.getString("resume_uuid"))));
 
-            insertItemToResume(connection, "SELECT * FROM sections", rs ->
+            insertItemToResumeFromDB(connection, "SELECT * FROM sections", rs ->
                     insertSectionIntoResume(rs, resumeMap.get(rs.getString("resume_uuid"))));
             return new ArrayList<>(resumeMap.values());
         });
     }
 
-    private void insertContactIntoResume(ResultSet resultSet, Resume resume) throws SQLException {
+    private void insertContactToResumeFromDB(ResultSet resultSet, Resume resume) throws SQLException {
         String nameOfType = resultSet.getString("type");
         if (nameOfType != null) {
             ContactType contactType = ContactType.valueOf(nameOfType);
@@ -195,7 +195,7 @@ public class SqlStorage implements Storage {
                 });
     }
 
-    private void insertItemToResume(Connection connection, String sqlCommand, ResumeDataInserter resumeDataInserter) throws SQLException {
+    private void insertItemToResumeFromDB(Connection connection, String sqlCommand, ResumeDataInserter resumeDataInserter) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sqlCommand)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {

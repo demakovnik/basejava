@@ -46,9 +46,7 @@
             <h3>${type.title}</h3>
             <textarea name="${type.name()}" cols=100
                       rows=4><%=String.join("\n", ((AchievementOrQualificationsSection) section).
-                    getListOfAchievementsOrQualifications())%>
-                </textarea>
-
+                    getListOfAchievementsOrQualifications()).trim()%></textarea>
         </c:when>
         <c:when test="${type.name().equals('EXPERIENCE') || type.name().equals('EDUCATION')}">
             <c:if test="<%=!((ExperienceOrEducationSection) section).getListOfExperienceOrEducation().isEmpty()%>">
@@ -74,22 +72,20 @@
                                       rows=3>${position.description.trim()}</textarea>
                         <h5>Период работы:</h5>
                         <p>с:
-                            <input type="text" name=${type.name()}_posStartTime_${orgCounter.index} size=15
+                            <input placeholder="MM/YYYY" type="text" name=${type.name()}_posStartTime_${orgCounter.index} size=15
                                    value="${DateUtil.localDateToText(position.startTime)}"><br/>
                             по:
-                            <input type="text" name=${type.name()}_posEndTime_${orgCounter.index} size=15
+                            <input placeholder="MM/YYYY" type="text" name=${type.name()}_posEndTime_${orgCounter.index} size=15
                                    value="${DateUtil.localDateToText(position.endTime)}"><br/>
                         </p>
                         </p>
                     </c:forEach>
                 </c:forEach>
             </c:if>
-
         </c:when>
         </c:choose>
         </c:forEach>
         </p>
-
         <button type="submit">Сохранить</button>
         <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
