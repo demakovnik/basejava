@@ -1,25 +1,17 @@
 package com.urise.webapp;
 
-import com.urise.webapp.fileoperator.ObjectToByteStreamOperator;
-import com.urise.webapp.storage.FileStorage;
-import com.urise.webapp.storage.PathStorage;
 import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.storage.Storage;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+
 
 public class Config {
-    private static final File PROPS = new File(getBaseDir() ,"config/resumes.properties");
+    private static final String PROPS = "/resumes.properties";
     private static final Config INSTANCE = new Config();
 
     private final File storageDir;
@@ -35,7 +27,7 @@ public class Config {
     }
 
     private Config() {
-        try (InputStream is = new FileInputStream(PROPS)) {
+        try (InputStream is = Config.class.getResourceAsStream(PROPS)) {
             Properties props = new Properties();
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
@@ -44,16 +36,8 @@ public class Config {
             dbPassword = props.getProperty("db.password");
             storage = new SqlStorage();
         } catch (IOException e) {
-            throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
+            throw new IllegalStateException("Invalid config file " + PROPS);
         }
-    }
-
-    public static String getBaseDir() {
-        String basedir = System.getProperty("basedir");
-        if (basedir == null) {
-            basedir = ".";
-        }
-        return basedir;
     }
 
     public File getStorageDir() {
